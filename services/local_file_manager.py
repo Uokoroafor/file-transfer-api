@@ -17,7 +17,7 @@ download_directory = Path(os.getenv("DOWNLOAD_DIRECTORY", "data/downloads"))
 download_directory.mkdir(parents=True, exist_ok=True)  # Create the download directory if it doesn't exist
 
 
-class FileManager(FileManagerAbstract):
+class LocalFileManager(FileManagerAbstract):
     """Concrete class for the file manager.
 
     It contains the methods previously defined in the abstract class to upload, download, replace, rename and delete files.

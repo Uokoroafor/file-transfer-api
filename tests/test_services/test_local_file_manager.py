@@ -1,6 +1,7 @@
 import pytest
-from services.file_manager import FileManager
-from exceptions.custom_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileReplaceError, FileDeleteError, FileRenameError
+from services.local_file_manager import LocalFileManager
+from exceptions.custom_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileReplaceError, \
+    FileDeleteError, FileRenameError
 from io import BytesIO
 from unittest.mock import mock_open, patch, MagicMock
 from pathlib import Path
@@ -8,7 +9,7 @@ from pathlib import Path
 
 # Test for successful file upload
 def test_upload_file_success():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     mock_file_data = BytesIO(b"test data")
     test_uuid = "test_file_id"
 
@@ -23,7 +24,7 @@ def test_upload_file_success():
 
 # Test for file upload failure
 def test_upload_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     mock_file_data = BytesIO(b"test data")
 
     with patch("builtins.open", side_effect=IOError("Failed to open")):
@@ -35,7 +36,7 @@ def test_upload_file_failure():
 
 # Test for successful file download
 def test_download_file_success():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "existing_file"
     file_content = b"test data"
     download_location = Path("/mock/download")
@@ -47,7 +48,7 @@ def test_download_file_success():
         mock_file.read_bytes.return_value = file_content
         with patch("builtins.open", mock_open(), create=True):
             with patch("pathlib.Path.read_bytes", mock_file.read_bytes):
-                with patch("services.file_manager.download_directory", download_location):
+                with patch("services.local_file_manager.download_directory", download_location):
                     message = file_manager.download_file(test_file_id)
 
     assert message == "File downloaded"
@@ -56,11 +57,11 @@ def test_download_file_success():
 
 # Test for failure when trying to download file that doesn't exist - filedoesnotexisterror
 def test_download_non_existing_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "nonexistent_file"
     upload_directory = Path("test_file_location")
 
-    with patch("services.file_manager.upload_directory", upload_directory):
+    with patch("services.local_file_manager.upload_directory", upload_directory):
         with patch.object(Path, "is_file", return_value=False):
             with pytest.raises(FileDoesNotExistError) as excinfo:
                 file_manager.download_file(test_file_id)
@@ -70,7 +71,7 @@ def test_download_non_existing_file_failure():
 
 # Test for failure when trying to download file that exists but fails to open - filedownloaderror
 def test_download_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "test_file"
 
     with patch.object(Path, "is_file", return_value=True):
@@ -83,7 +84,7 @@ def test_download_file_failure():
 
 # Test for successful file replace
 def test_replace_file_success():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "existing_file"
     file_content = b"test data"
 
@@ -102,12 +103,12 @@ def test_replace_file_success():
 
 # Test for failure when trying to replace file that doesn't exist - filedoesnotexisterror
 def test_replace_non_existing_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "nonexistent_file"
     upload_directory = Path("test_file_location")
     file_content = b"test data"
 
-    with patch("services.file_manager.upload_directory", upload_directory):
+    with patch("services.local_file_manager.upload_directory", upload_directory):
         with patch.object(Path, "is_file", return_value=False):
             with pytest.raises(FileDoesNotExistError) as excinfo:
                 mock_file = MagicMock()
@@ -118,7 +119,7 @@ def test_replace_non_existing_file_failure():
 
 
 def test_replace_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "test_file"
     file_content = b"test data"
 
@@ -134,7 +135,7 @@ def test_replace_file_failure():
 
 # Test for successful file delete
 def test_delete_file_success():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "existing_file"
 
     # Mocking Path.is_file to simulate the file's existence in the upload directory
@@ -149,11 +150,11 @@ def test_delete_file_success():
 
 # Test for failure when trying to delete file that doesn't exist - filedoesnotexisterror
 def test_delete_non_existing_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "nonexistent_file"
     upload_directory = Path("test_file_location")
 
-    with patch("services.file_manager.upload_directory", upload_directory):
+    with patch("services.local_file_manager.upload_directory", upload_directory):
         with patch.object(Path, "is_file", return_value=False):
             with pytest.raises(FileDoesNotExistError) as excinfo:
                 file_manager.delete_file(test_file_id)
@@ -163,7 +164,7 @@ def test_delete_non_existing_file_failure():
 
 # Test for failure when trying to delete file that exists due to unexpected error - filedeleteerror
 def test_delete_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "test_file"
 
     with patch.object(Path, "is_file", return_value=True):
@@ -176,7 +177,7 @@ def test_delete_file_failure():
 
 # Test for successful file rename
 def test_rename_file_success():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "existing_file"
     new_file_id = "new_file_id"
 
@@ -192,12 +193,12 @@ def test_rename_file_success():
 
 # Test for failure when trying to rename file that doesn't exist - filedoesnotexisterror
 def test_rename_non_existing_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "nonexistent_file"
     new_file_id = "new_file_id"
     upload_directory = Path("test_file_location")
 
-    with patch("services.file_manager.upload_directory", upload_directory):
+    with patch("services.local_file_manager.upload_directory", upload_directory):
         with patch.object(Path, "is_file", return_value=False):
             with pytest.raises(FileDoesNotExistError) as excinfo:
                 file_manager.rename_file(test_file_id, new_file_id)
@@ -207,7 +208,7 @@ def test_rename_non_existing_file_failure():
 
 # Test for failure when trying to rename file that exists due to unexpected error - filerenameerror
 def test_rename_file_failure():
-    file_manager = FileManager()
+    file_manager = LocalFileManager()
     test_file_id = "test_file"
     new_file_id = "new_file_id"
 
