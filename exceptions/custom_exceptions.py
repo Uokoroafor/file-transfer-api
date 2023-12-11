@@ -1,76 +1,91 @@
-class FileUploadError(Exception):
+from abstracts.exceptions_abstract import BaseCustomException
+
+
+class FileUploadError(BaseCustomException):
     """Raised when file upload fails"""
 
-    def __init__(self, message: str = "Error occurred during file upload"):
+    def __init__(self, description: str = "Error occurred during file upload"):
         """Constructor for FileUploadError.
 
         Args:
-            Error message that defaults to "Error occurred during file upload".
+            Error description that defaults to "Error occurred during file upload".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileUploadError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
 
 
-class FileDownloadError(Exception):
+class FileDownloadError(BaseCustomException):
     """Raised when file download fails"""
 
-    def __init__(self, message: str = "Error occurred during file download"):
+    def __init__(self, description: str = "Error occurred during file download"):
         """Constructor for FileDownloadError.
 
         Args:
-            Error message that defaults to "Error occurred during file download".
+            Error description that defaults to "Error occurred during file download".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileDownloadError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
 
 
-class FileReplaceError(Exception):
+class FileReplaceError(BaseCustomException):
     """Raised when file replace fails"""
 
-    def __init__(self, message: str = "Error occurred during file replace"):
+    def __init__(self, description: str = "Error occurred during file replace"):
         """Constructor for FileReplaceError.
 
         Args:
-            Error message that defaults to "Error occurred during file replace".
+            Error description that defaults to "Error occurred during file replace".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileReplaceError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
 
 
-class FileDeleteError(Exception):
+class FileDeleteError(BaseCustomException):
     """Raised when file delete fails"""
 
-    def __init__(self, message: str = "Error occurred during file delete"):
+    def __init__(self, description: str = "Error occurred during file delete"):
         """Constructor for FileDeleteError.
 
         Args:
-            Error message that defaults to "Error occurred during file delete".
+            Error description that defaults to "Error occurred during file delete".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileDeleteError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
 
 
-class FileRenameError(Exception):
+class FileRenameError(BaseCustomException):
     """Raised when file rename fails"""
 
-    def __init__(self, message: str = "Error occurred during file rename"):
+    def __init__(self, description: str = "Error occurred during file rename"):
         """Constructor for FileRenameError.
 
         Args:
-            Error message that defaults to "Error occurred during file rename".
+            Error description that defaults to "Error occurred during file rename".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileRenameError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
 
 
-class FileDoesNotExistError(Exception):
+class FileDoesNotExistError(BaseCustomException):
     """Raised when file does not exist"""
 
-    def __init__(self, message: str = "File does not exist"):
+    def __init__(self, description: str = "File does not exist"):
         """Constructor for FileDoesNotExistError.
 
         Args:
-            Error message that defaults to "File does not exist".
+            Error description that defaults to "File does not exist".
         """
-        self.message = message
-        super().__init__(self.message)
+        self.name = "FileDoesNotExistError"
+        self.status_code = 404
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
