@@ -7,7 +7,7 @@ class AbstractResponse(BaseModel, ABC):
 
     It contains methods that will be defined elsewhere in concrete classes.
     """
-    status_code: int
+    status_code: int = 200
     message: str
 
 

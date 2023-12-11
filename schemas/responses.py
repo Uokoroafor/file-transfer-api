@@ -20,13 +20,11 @@ class FileUploadResponse(AbstractResponse):
 class FileDownloadResponse(AbstractResponse):
     """Response model for file download"""
     file_id: str
-    content_type: str
 
     class Config:
         schema_extra = {
             "example": {
                 "file_id": "12345678-1234-5678-1234-567812345678",
-                "content_type": "image/jpeg",
                 "status_code": 200,
                 "message": "File downloaded"
             }
@@ -75,5 +73,27 @@ class FileRenameResponse(AbstractResponse):
                 "new_file_id": "28cf0697-1632-4fa5-b0a1-3b58bf57ebe7",
                 "status_code": 200,
                 "message": "File renamed"
+            }
+        }
+
+
+class StandardResponse(AbstractResponse):
+    """Response model for standard responses"""
+    class Config:
+        schema_extra = {
+            "example": {
+                "message": "Welcome to the API",
+                "status_code": 200
+            }
+        }
+
+
+class ErrorResponse(AbstractResponse):
+    """Response model for errors"""
+    class Config:
+        schema_extra = {
+            "example": {
+                "message": "File not found",
+                "status_code": 404
             }
         }
