@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict
 from fastapi import File, UploadFile
 from schemas.file_metadata import FileMetadata
 

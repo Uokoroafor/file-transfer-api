@@ -1,9 +1,7 @@
-from typing import List, Dict
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from pathlib import Path
-from routers import fastapi_file_router, fastapi_database_router, fastapi_router
 from abstracts.exceptions_abstract import BaseCustomException
+from routers import fastapi_file_router, fastapi_database_router, fastapi_router
 
 app = FastAPI()
 

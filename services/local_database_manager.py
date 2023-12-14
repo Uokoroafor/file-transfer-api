@@ -1,4 +1,4 @@
-from exceptions.custom_exceptions import DatabaseReadError, DatabaseWriteError, DatabaseReadError
+from exceptions.custom_exceptions import DatabaseWriteError, DatabaseReadError
 from models.database import SessionLocal
 from models.file_model import FileRecord
 from typing import List
