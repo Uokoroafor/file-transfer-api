@@ -22,11 +22,12 @@ class FileManagerAbstract(ABC):
         pass
 
     @abstractmethod
-    def download_file(self, file_id: str) -> Any:
+    def download_file(self, file_id: str, download_name: str = None) -> Any:
         """Abstract method to download a file.
 
         Args:
             file_id : Id of the file to download
+            download_name : Name to download the file as (optional)
 
         Returns:
             The result of the file download as defined by the concrete class.
@@ -68,5 +69,14 @@ class FileManagerAbstract(ABC):
 
         Returns:
             The result of the file rename as defined by the concrete class.
+        """
+        pass
+
+    @abstractmethod
+    def list_all_files(self) -> Any:
+        """Abstract method to list all files.
+
+        Returns:
+            The result of the file list as defined by the concrete class.
         """
         pass

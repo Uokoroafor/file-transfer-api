@@ -1,7 +1,7 @@
 from abstracts.file_manager_abstract import FileManagerAbstract
 from exceptions.custom_exceptions import FileUploadError, FileDownloadError, FileReplaceError, FileDeleteError, \
     FileRenameError, FileDoesNotExistError
-from typing import Tuple
+from typing import Tuple, Optional, Any, List
 from io import BytesIO
 import uuid
 from dotenv import load_dotenv
@@ -35,22 +35,23 @@ class LocalFileManager(FileManagerAbstract):
         Raises:
             FileUploadError: If the file upload fails
         """
-        # generate a unique id for the file
         try:
             file_id = str(uuid.uuid4())
             file_location = upload_directory / file_id
             # Save the file to the upload directory
             with open(file_location, "wb") as f:
                 f.write(file.read())
-            return file_id, "File uploaded"
+            return file_id, f"File uploaded with id {file_id} to {upload_directory}"
         except Exception as e:
             raise FileUploadError(f"Error occurred during file upload: {e}")
 
-    def download_file(self, file_id: str) -> str:
+    def download_file(self, file_id: str, download_name: Optional[str] = None) -> str:
         """Downloads a file from the upload directory to the download directory.
 
         Args:
             file_id : Id of the file to download
+            download_name : Name to give the downloaded file in the download directory
+
 
         Returns:
             The result of the file download.
@@ -64,10 +65,14 @@ class LocalFileManager(FileManagerAbstract):
         if not file_location.is_file():
             raise FileDoesNotExistError(f"File does not exist at {file_location}")
 
+        if download_name is None:
+            download_name = file_id
+        download_location = download_directory / download_name
+
         try:
-            with open(download_directory / file_id, "wb") as f:
+            with open(download_location, "wb") as f:
                 f.write(file_location.read_bytes())
-            return "File downloaded"
+            return f"File downloaded as {download_name} to {download_directory}"
         except Exception as e:
             raise FileDownloadError(f"Error occurred during file download: {e}")
 
@@ -93,7 +98,7 @@ class LocalFileManager(FileManagerAbstract):
 
             with open(file_location, "wb") as f:
                 f.write(file.read())
-            return "File replaced"
+            return f"File with id {file_id} replaced"
         except Exception as e:
             raise FileReplaceError(f"Error occurred during file replace: {e}")
 
@@ -116,7 +121,7 @@ class LocalFileManager(FileManagerAbstract):
 
         try:
             file_location.unlink()
-            return "File deleted"
+            return f"File with id {file_id} deleted"
 
         except Exception as e:
             raise FileDeleteError(f"Error occurred during file delete: {e}")
@@ -141,6 +146,14 @@ class LocalFileManager(FileManagerAbstract):
             raise FileDoesNotExistError(f"File does not exist at {old_file_location}")
         try:
             old_file_location.rename(new_file_location)
-            return "File renamed"
+            return f"File with id {old_file_id} renamed to {new_file_id}"
         except Exception as e:
             raise FileRenameError(f"Error occurred during file rename: {e}")
+
+    def list_all_files(self) -> List[str]:
+        """Lists all files in the upload directory.
+
+        Returns:
+            A list of all files in the upload directory.
+        """
+        return [file.name for file in upload_directory.iterdir() if file.is_file()]
