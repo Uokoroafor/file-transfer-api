@@ -89,3 +89,48 @@ class FileDoesNotExistError(BaseCustomException):
         self.status_code = 404
         self.description = description
         super().__init__(self.name, self.description, self.status_code)
+
+
+class DatabaseReadError(BaseCustomException):
+    """Raised when database read fails"""
+
+    def __init__(self, description: str = "Error occurred during database read"):
+        """Constructor for DatabaseReadError.
+
+        Args:
+            Error description that defaults to "Error occurred during database read".
+        """
+        self.name = "DatabaseReadError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
+
+
+class DatabaseWriteError(BaseCustomException):
+    """Raised when database write fails"""
+
+    def __init__(self, description: str = "Error occurred during database write"):
+        """Constructor for DatabaseWriteError.
+
+        Args:
+            Error description that defaults to "Error occurred during database write".
+        """
+        self.name = "DatabaseWriteError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
+
+
+class DatabaseDeleteError(BaseCustomException):
+    """Raised when database delete fails"""
+
+    def __init__(self, description: str = "Error occurred during database delete"):
+        """Constructor for DatabaseDeleteError.
+
+        Args:
+            Error description that defaults to "Error occurred during database delete".
+        """
+        self.name = "DatabaseDeleteError"
+        self.status_code = 500
+        self.description = description
+        super().__init__(self.name, self.description, self.status_code)
