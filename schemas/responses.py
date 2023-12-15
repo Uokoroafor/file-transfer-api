@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from abstracts.response_abstract import CustomResponse
 
 
 @dataclass
-class FileUploadResponse:
+class FileUploadResponse(CustomResponse):
     """Response model for file upload"""
     file_id: str
     content_type: str
@@ -11,16 +12,15 @@ class FileUploadResponse:
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
+                "file_id": "123",
                 "content_type": "image/jpeg",
-                "status_code": 200,
                 "message": "File uploaded"
             }
         }
 
 
 @dataclass
-class FileDownloadResponse:
+class FileDownloadResponse(CustomResponse):
     """Response model for file download"""
     file_id: str
     message: str
@@ -28,15 +28,14 @@ class FileDownloadResponse:
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
-                "status_code": 200,
+                "file_id": "123",
                 "message": "File downloaded"
             }
         }
 
 
 @dataclass
-class FileReplaceResponse:
+class FileReplaceResponse(CustomResponse):
     """Response model for file replace"""
     file_id: str
     content_type: str
@@ -45,16 +44,15 @@ class FileReplaceResponse:
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
+                "file_id": "123",
                 "content_type": "image/jpeg",
-                "status_code": 200,
-                "message": "File updated"
+                "message": "File replaced"
             }
         }
 
 
 @dataclass
-class FileDeleteResponse:
+class FileDeleteResponse(CustomResponse):
     """Response model for file delete"""
     file_id: str
     message: str
@@ -62,15 +60,14 @@ class FileDeleteResponse:
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
-                "status_code": 200,
+                "file_id": "123",
                 "message": "File deleted"
             }
         }
 
 
 @dataclass
-class FileRenameResponse:
+class FileRenameResponse(CustomResponse):
     """Response model for file rename"""
     old_file_id: str
     new_file_id: str
@@ -79,16 +76,15 @@ class FileRenameResponse:
     class Config:
         schema_extra = {
             "example": {
-                "old_file_id": "12345678-1234-5678-1234-567812345678",
-                "new_file_id": "28cf0697-1632-4fa5-b0a1-3b58bf57ebe7",
-                "status_code": 200,
+                "old_file_id": "123",
+                "new_file_id": "456",
                 "message": "File renamed"
             }
         }
 
 
 @dataclass
-class StandardResponse:
+class StandardResponse(CustomResponse):
     """Response model for standard responses"""
     message: str
 
@@ -96,27 +92,25 @@ class StandardResponse:
         schema_extra = {
             "example": {
                 "message": "Welcome to the API",
-                "status_code": 200
             }
         }
 
 
 @dataclass
-class ErrorResponse:
+class ErrorResponse(CustomResponse):
     """Response model for errors"""
     message: str
 
     class Config:
         schema_extra = {
             "example": {
-                "message": "File not found",
-                "status_code": 404
+                "message": "File not found"
             }
         }
 
 
 @dataclass
-class DatabaseSelectResponse:
+class DatabaseSelectResponse(CustomResponse):
     """Response model for database select"""
     file_id: str
     name: str
@@ -128,20 +122,18 @@ class DatabaseSelectResponse:
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
+                "file_id": "123",
                 "name": "image.jpg",
                 "content_type": "image/jpeg",
-                "size": 123456,
+                "size": 100,
                 "created_timestamp": "2021-01-01T00:00:00",
-                "last_modified_timestamp": "2021-01-01T00:00:00",
-                "status_code": 200,
-                "message": "File selected"
+                "last_modified_timestamp": "2021-01-01T00:00:00"
             }
         }
 
 
 @dataclass
-class DatabaseUpdateResponse:
+class DatabaseUpdateResponse(CustomResponse):
     """Response model for database update"""
     file_id: str
     name: str
@@ -150,32 +142,29 @@ class DatabaseUpdateResponse:
     created_timestamp: str
     last_modified_timestamp: str
 
+
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
+                "file_id": "123",
                 "name": "image.jpg",
                 "content_type": "image/jpeg",
-                "size": 123456,
+                "size": 100,
                 "created_timestamp": "2021-01-01T00:00:00",
-                "last_modified_timestamp": "2021-01-01T00:00:00",
-                "status_code": 200,
-                "message": "File updated"
+                "last_modified_timestamp": "2021-01-01T00:00:00"
             }
         }
 
 
 @dataclass
-class DatabaseDeleteResponse:
+class DatabaseDeleteResponse(CustomResponse):
     """Response model for database delete"""
     file_id: str
 
     class Config:
         schema_extra = {
             "example": {
-                "file_id": "12345678-1234-5678-1234-567812345678",
-                "status_code": 200,
-                "message": "File deleted"
+                "file_id": "123",
             }
         }
 

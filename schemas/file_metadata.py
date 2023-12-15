@@ -25,3 +25,28 @@ class FileMetadata:
             'size': self.size,
             'file_id': self.file_id
         }
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "test.txt",
+                "content_type": "text/plain",
+                "size": 100,
+                "file_id": "123"
+            }
+        }
+
+
+if __name__ == '__main__':
+    import json
+    from pathlib import Path
+    import os
+
+    # Create the test_fixtures folder if it doesn't exist
+    test_fixtures_folder = Path(__file__).parent.parent / "tests" / "test_fixtures/file_metadata"
+    if not test_fixtures_folder.exists():
+        os.mkdir(test_fixtures_folder)
+
+    for cls in [FileMetadata]:
+        with open(test_fixtures_folder / f"{cls.__name__}.json", "w") as f:
+            json.dump(cls.Config.schema_extra["example"], f, indent=4)
