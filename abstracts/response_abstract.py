@@ -9,9 +9,6 @@ class CustomResponse:
     It contains methods that will be defined elsewhere in concrete classes.
     """
 
-    message: str
-    status_code: int = 200
-
     def __init__(self, **kwargs):
         """Constructor for CustomResponse. It will set the attributes of the class based on the keyword arguments.
 
