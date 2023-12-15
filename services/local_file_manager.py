@@ -43,7 +43,7 @@ class LocalFileManager(FileManagerAbstract):
             # Save the file to the upload directory
             with open(file_location, "wb") as f:
                 f.write(file.read())
-            return file_id, f"File uploaded with id {file_id} to {upload_directory}"
+            return file_id, f"File with id {file_id} uploaded to {upload_directory}"
         except Exception as e:
             raise FileUploadError(f"Error occurred during file upload: {e}")
 
