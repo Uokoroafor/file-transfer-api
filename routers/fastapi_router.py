@@ -41,7 +41,7 @@ async def full_root() -> StandardResponse:
     return StandardResponse(message="Welcome to the full API")
 
 
-@router.post("/upload/{file_id}")
+@router.post("/upload")
 async def upload_file_and_create_record(file: UploadFile = File(...)) -> FileUploadResponse:
     """Upload a file to the server and create a record in the database.
 
