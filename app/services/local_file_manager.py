@@ -6,8 +6,8 @@ from typing import Tuple, Optional, List
 
 from dotenv import load_dotenv
 
-from abstracts.file_manager_abstract import FileManagerAbstract
-from exceptions.custom_exceptions import FileUploadError, FileDownloadError, FileReplaceError, FileDeleteError, \
+from app.abstracts.file_manager_abstract import FileManagerAbstract
+from app.exceptions.custom_exceptions import FileUploadError, FileDownloadError, FileReplaceError, FileDeleteError, \
     FileRenameError, FileDoesNotExistError
 
 load_dotenv()  # Load the variables from .env

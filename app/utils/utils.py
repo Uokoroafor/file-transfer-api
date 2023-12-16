@@ -1,6 +1,6 @@
 from typing import Dict
 from fastapi import File, UploadFile
-from schemas.file_metadata import FileMetadata
+from app.schemas.file_metadata import FileMetadata
 
 
 def create_file_metadata(file: UploadFile = File(...)) -> FileMetadata:
@@ -29,3 +29,5 @@ def get_file_size(file: UploadFile = File(...)) -> int:
     file.file.seek(0)  # Reset the file position to the beginning
 
     return file_size
+
+

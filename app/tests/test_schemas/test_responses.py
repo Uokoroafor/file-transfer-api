@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from schemas.responses import DatabaseDeleteResponse, DatabaseUpdateResponse, DatabaseSelectResponse, \
+from app.schemas.responses import DatabaseDeleteResponse, DatabaseUpdateResponse, DatabaseSelectResponse, \
     FileUploadResponse, FileDownloadResponse, FileReplaceResponse, FileDeleteResponse, FileRenameResponse, \
     StandardResponse, ErrorResponse
 

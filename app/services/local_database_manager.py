@@ -1,8 +1,8 @@
-from exceptions.custom_exceptions import DatabaseWriteError, DatabaseReadError
-from models.database import SessionLocal
-from models.file_model import FileRecord
+from app.exceptions.custom_exceptions import DatabaseWriteError, DatabaseReadError
+from app.models.database import SessionLocal
+from app.models.file_model import FileRecord
 from typing import List
-from abstracts.database_manager_abstract import DatabaseManagerAbstract
+from app.abstracts.database_manager_abstract import DatabaseManagerAbstract
 from sqlalchemy import text
 
 

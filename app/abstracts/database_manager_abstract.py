@@ -2,7 +2,7 @@
 # in concrete classes
 
 from abc import ABC, abstractmethod
-from models.file_model import FileRecord
+from app.models.file_model import FileRecord
 
 
 class DatabaseManagerAbstract(ABC):
