@@ -1,10 +1,10 @@
 from typing import List
 
 from fastapi import APIRouter
-from schemas.responses import FileUploadResponse, FileDownloadResponse, FileReplaceResponse, FileDeleteResponse, \
-    FileRenameResponse, StandardResponse, DatabaseSelectResponse
-from services.local_database_manager import LocalDatabaseManager
-from services.aws_database_manager import AWSDatabaseManager
+from app.schemas.responses import FileDeleteResponse, \
+    StandardResponse, DatabaseSelectResponse
+from app.services.local_database_manager import LocalDatabaseManager
+from app.services.aws_database_manager import AWSDatabaseManager
 import os
 
 

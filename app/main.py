@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from abstracts.exceptions_abstract import BaseCustomException
-from routers import fastapi_file_router, fastapi_database_router, fastapi_router
+from app.abstracts.exceptions_abstract import BaseCustomException
+from app.routers import fastapi_file_router
+from app.routers import fastapi_database_router, fastapi_router
 
 app = FastAPI()
 

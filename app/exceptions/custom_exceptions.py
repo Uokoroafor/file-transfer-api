@@ -1,4 +1,4 @@
-from abstracts.exceptions_abstract import BaseCustomException
+from app.abstracts.exceptions_abstract import BaseCustomException
 
 
 class FileUploadError(BaseCustomException):

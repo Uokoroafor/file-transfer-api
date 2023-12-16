@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from abstracts.response_abstract import CustomResponse
+from app.abstracts.response_abstract import CustomResponse
 
 
 @dataclass

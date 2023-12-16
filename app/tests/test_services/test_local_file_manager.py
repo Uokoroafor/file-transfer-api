@@ -5,11 +5,11 @@ from unittest.mock import patch
 
 import pytest
 
-from exceptions.custom_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileReplaceError, \
+from app.exceptions.custom_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileReplaceError, \
     FileDeleteError, FileRenameError
-from services.local_file_manager import LocalFileManager
+from app.services.local_file_manager import LocalFileManager
 
-DATA_DIR = Path("tests/test_fixtures/data")
+DATA_DIR = Path("../test_fixtures/data")
 UPLOAD_DIR = DATA_DIR / "uploads"
 DOWNLOAD_DIR = DATA_DIR / "downloads"
 
@@ -69,8 +69,8 @@ def temp_rename_file(file_system):
     yield f.name
 
 
-@patch("services.local_file_manager.upload_directory", UPLOAD_DIR)
-@patch("services.local_file_manager.download_directory", DOWNLOAD_DIR)
+@patch("app.services.local_file_manager.upload_directory", UPLOAD_DIR)
+@patch("app.services.local_file_manager.download_directory", DOWNLOAD_DIR)
 class TestLocalFileManager:
     def test_upload_file_moves_file_to_upload_directory(self, file_manager, temp_file, file_system):
         with open(temp_file, "rb") as f:

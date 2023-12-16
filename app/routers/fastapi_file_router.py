@@ -1,13 +1,12 @@
 from fastapi import File, UploadFile, APIRouter
-from abstracts.exceptions_abstract import BaseCustomException
-from schemas.responses import FileDownloadResponse, StandardResponse, FileReplaceResponse, FileDeleteResponse, \
+from app.abstracts.exceptions_abstract import BaseCustomException
+from app.schemas.responses import FileDownloadResponse, StandardResponse, FileReplaceResponse, FileDeleteResponse, \
     FileUploadResponse, FileRenameResponse
-from services.local_file_manager import LocalFileManager
-from services.aws_file_manager import AWSFileManager
+from app.services.local_file_manager import LocalFileManager
+from app.services.aws_file_manager import AWSFileManager
 import os
 from io import BytesIO
 
-from utils.utils import create_file_metadata
 
 router = APIRouter()
 FILE_STORAGE_TYPE = os.getenv("FILE_STORAGE_TYPE", "local")

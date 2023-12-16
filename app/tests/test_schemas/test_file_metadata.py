@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-from schemas.file_metadata import FileMetadata
+from app.schemas.file_metadata import FileMetadata
 
 
 @pytest.fixture

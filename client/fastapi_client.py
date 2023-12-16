@@ -1,7 +1,7 @@
 from typing import Optional, Dict
 import requests
 from requests.exceptions import HTTPError
-from utils.utils import ErrorLogger
+from app.utils.logging_utils import ErrorLogger
 import mimetypes
 
 

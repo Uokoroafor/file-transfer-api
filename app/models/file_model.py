@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from models.database import Base
+from sqlalchemy import Column, Integer, String
+from app.models.database import Base
 import os
 from dotenv import load_dotenv
-from dataclasses import dataclass
+
 load_dotenv()  # Load the variables from .env
 TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME")
 
