@@ -2,7 +2,7 @@ import os
 from io import BytesIO
 from fastapi import APIRouter
 from fastapi import File, UploadFile
-from app.abstracts.exceptions_abstract import BaseCustomException
+from zz_archive.app.abstracts.exceptions_abstract import BaseCustomException
 from app.schemas.responses import FileUploadResponse, FileDownloadResponse, FileReplaceResponse, FileDeleteResponse, \
     FileRenameResponse, StandardResponse, DatabaseSelectResponse
 from app.services.aws_database_manager import AWSDatabaseManager

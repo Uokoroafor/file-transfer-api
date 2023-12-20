@@ -1,5 +1,5 @@
 from fastapi import File, UploadFile, APIRouter
-from app.abstracts.exceptions_abstract import BaseCustomException
+from zz_archive.app.abstracts.exceptions_abstract import BaseCustomException
 from app.schemas.responses import FileDownloadResponse, StandardResponse, FileReplaceResponse, FileDeleteResponse, \
     FileUploadResponse, FileRenameResponse
 from app.services.local_file_manager import LocalFileManager
