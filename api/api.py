@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.fastapi_router import router as fastapi_router
+from api.routers.fastapi_router import router as fastapi_router
 
 app = FastAPI()
 app.include_router(fastapi_router, prefix="/files")
