@@ -96,19 +96,11 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         file_record.content_type = content_type
         file_record.size = size
 
-        # result = self.db.execute(text("SELECT CURRENT_TIMESTAMP"))
-        # last_modified_timestamp = result.scalar()
-
-        # Format the timestamp as a string
-        # last_modified_timestamp_str = last_modified_timestamp.strftime('%Y-%m-%d %H:%M:%S')
         file_record.last_modified_timestamp = datetime.datetime.now()
 
         self.db.commit()
         self.db.refresh(file_record)
         return "File record updated successfully"
-        # except Exception as e:
-        #     self.db.rollback()
-        #     raise DatabaseWriteError(f'Error occurred during file record update: {e}')
 
     def rename_file_record(self, file_id: str, new_file_id: str) -> str:
         """Rename a file record in the database.
@@ -122,27 +114,16 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         """
 
         file_record = self.get_file_record(file_id)
-        # except DatabaseReadError as e:
-        #     raise e
-        #
-        # if file_record is None:
-        #     raise DatabaseReadError(f'File with id {file_id} does not exist')
 
         file_record.file_id = new_file_id
 
-        result = self.db.execute(text("SELECT CURRENT_TIMESTAMP"))
-        last_modified_timestamp = result.scalar()
-
         # Format the timestamp as a string
-        last_modified_timestamp_str = last_modified_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        last_modified_timestamp_str = datetime.datetime.now()
         file_record.last_modified_timestamp = last_modified_timestamp_str
 
         self.db.commit()
         self.db.refresh(file_record)
         return "File record renamed successfully"
-        # except Exception as e:
-        #     self.db.rollback()
-        #     raise DatabaseWriteError(f'Error occurred during file record rename: {e}')
 
     def delete_file_record(self, file_id: str) -> str:
         """Delete a file record in the database.
@@ -155,15 +136,9 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         """
 
         file_record = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
-        # except Exception as e:
-        #     raise DatabaseReadError(f'Error occurred during file record read: {e}')
-        #
-        # try:
+
         self.db.delete(file_record)
         self.db.commit()
-        # except Exception as e:
-        #     self.db.rollback()
-        #     raise DatabaseWriteError(f'Error occurred during file record delete: {e}')
         return "File record deleted successfully"
 
     def delete_all_file_records(self) -> str:
@@ -178,15 +153,9 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         """
         deleted_count = self.get_count()
 
-        # except Exception as e:
-        #     raise DatabaseReadError(f'Error occurred during file record read: {e}')
-        #
-        # try:
         self.db.query(DatabaseEntry).delete()
         self.db.commit()
-        # except Exception as e:
-        #     self.db.rollback()
-        #     raise DatabaseWriteError(f'Error occurred during file record delete: {e}')
+
         return f"All of the {deleted_count} file records have been deleted."
 
     def get_count(self) -> int:
