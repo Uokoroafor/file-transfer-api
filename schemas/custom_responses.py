@@ -11,12 +11,6 @@ class FileIdAndPath:
 
 
 @dataclass
-class CustomResponseWithFileID:
-    """Response model for standard responses"""
-    file_id: str
-
-
-@dataclass
 class CustomMessage:
     """Response model for standard responses"""
     message: str

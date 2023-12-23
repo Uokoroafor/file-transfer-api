@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional, Union, ByteString
 import requests
 
-from schemas.responses.custom_responses import FileIdAndPath
+from schemas.custom_responses import FileIdAndPath
 
 
 class APIClient:
@@ -43,7 +43,6 @@ class APIClient:
         Returns:
             Response from the API.
         """
-        # content_type, _ = mimetypes.guess_type(file_path) or ("multipart/form-data", None)
         with open(file_path, "rb") as f:
             response = requests.post(self.base_url + "/files", files={"file": f})
             if response.ok:
