@@ -56,11 +56,7 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         Raises:
             DatabaseWriteError: If the file record creation fails
         """
-        # result = self.db.execute(text("SELECT CURRENT_TIMESTAMP"))
-        # created_timestamp = result.scalar()
-        #
-        # # Format the timestamp as a string
-        # # created_timestamp_str = created_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
         created_timestamp_str = datetime.datetime.now()
 
         file_record = DatabaseEntry(
@@ -100,12 +96,12 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         file_record.content_type = content_type
         file_record.size = size
 
-        result = self.db.execute(text("SELECT CURRENT_TIMESTAMP"))
-        last_modified_timestamp = result.scalar()
+        # result = self.db.execute(text("SELECT CURRENT_TIMESTAMP"))
+        # last_modified_timestamp = result.scalar()
 
         # Format the timestamp as a string
-        last_modified_timestamp_str = last_modified_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        file_record.last_modified_timestamp = last_modified_timestamp_str
+        # last_modified_timestamp_str = last_modified_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        file_record.last_modified_timestamp = datetime.datetime.now()
 
         self.db.commit()
         self.db.refresh(file_record)
@@ -207,10 +203,6 @@ if __name__ == "__main__":
     # # Create a local database manager
     manager = LocalDatabaseManager()
 
-    # # Create a file record
-    # file_record = manager.create_file_record(name="test_file", file_id="120", content_type="image/png", size=100)
-    # print(f'Created file record is {file_record}')
-
     # Get all file records
     file_records = manager.get_all_file_records()
     print(f'All file records are {file_records}')
@@ -219,10 +211,4 @@ if __name__ == "__main__":
     file_record = manager.get_file_record("120")
     print(f'File record is {file_record}')
 
-    # # Delete a file record
-    # file_record_deleted = manager.delete_file_record("123")
-    # print(f'Deleted file record is {file_record_deleted}')
-    #
-    # # Print all the attributes of the file record
-    # for attr, value in file_record_deleted.__dict__.items():
-    #     print(attr, value)
+
