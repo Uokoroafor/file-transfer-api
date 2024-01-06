@@ -1,6 +1,12 @@
+from fastapi import HTTPException
+
+
 class FileError(Exception):
     """Base class for file errors."""
-    pass
+
+    def raise_as_http(self, status_code: int = 500):
+        """Raise the exception as an HTTP exception"""
+        raise HTTPException(status_code=status_code, detail=str(f'{self.__class__.__name__}: {self.args[0]}'))
 
 
 class FileDownloadError(FileError):
