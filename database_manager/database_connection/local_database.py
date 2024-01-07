@@ -15,8 +15,3 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for the models
 Base = declarative_base()
-
-# if __name__ == '__main__':
-#     conn = engine.connect()
-#     print(conn)
-#     conn.close()
