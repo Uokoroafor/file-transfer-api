@@ -16,27 +16,27 @@ class APIClient:
         self.base_url = base_url
         self.logger = ErrorLogger(log_file_path=error_logger_path, name="APIClient")
 
-    def request_handler(self, response: requests.Response, contents: bool = False) -> Union[FileIdAndPath, ByteString, ErrorResponse]:
+    def request_handler(self, response: requests.Response, raw: bool = False) -> Union[FileIdAndPath, ByteString, ErrorResponse]:
         """Handle the response from the API.
 
         Args:
             response: Response from the API.
-            contents: Whether the response contains the contents of the file.
+            raw: Whether to return the raw content of the response. Defaults to False.
 
         Returns:
             Response from the API.
         """
         if response.ok:
-            if contents:
+            if raw:
                 return response.content
             else:
                 response = response.json()
                 return FileIdAndPath(file_id=response["file_id"],
                                      file_path=response["file_path"])
         else:
-            self.logger.log_error(f"Error uploading file: {response.status_code} - {response.json()['message']}")
+            self.logger.log_error(f"Error uploading file: {response.status_code} - {response.json()['detail']}")
             return ErrorResponse(status_code=response.status_code,
-                                 message=response.json()['message'])
+                                 message=response.json()['detail'])
 
     def upload_file(self, file_path: Union[str, Path]) -> Union[FileIdAndPath, ErrorResponse]:
         """Upload a file to the API.
@@ -61,7 +61,7 @@ class APIClient:
             Response from the API.
         """
         response = requests.get(self.base_url + f"/files/{file_id}")
-        return self.request_handler(response, contents=True)
+        return self.request_handler(response, raw=True)
 
     def rename_file(self, file_id: str, new_file_id: str) -> Union[FileIdAndPath, ErrorResponse]:
         """Rename a file in the API.
@@ -92,7 +92,7 @@ class APIClient:
 if __name__ == '__main__':
     client = APIClient(error_logger_path="../logs/errors.log")
     response1 = client.upload_file("../data/test.png")
-    response2 = client.download_file(response1.file_id)
+    response2 = client.download_file(response1.file_id+"1")
     response3 = client.rename_file(response1.file_id, "test2.png")
     response4 = client.delete_file("test2.png")
     pass

@@ -5,7 +5,7 @@ from uuid import uuid4
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from exceptions.file import FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError, FileUpdateError
+from exceptions.file_exceptions import FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError, FileUpdateError
 
 load_dotenv()
 

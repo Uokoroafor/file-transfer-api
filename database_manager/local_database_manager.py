@@ -5,7 +5,7 @@ from database_manager.schemas.database_entry import DatabaseEntry
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from database_manager.database_connection.local_database import SessionLocal
-from exceptions.database import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
+from exceptions.database_exceptions import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
 
 
 class LocalDatabaseManager(AbstractDatabaseManager):
