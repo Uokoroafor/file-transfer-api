@@ -1,26 +1,26 @@
-import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.exc import SQLAlchemyError
 
 
-def create_database_if_not_exists(database_url: str) -> str:
+def create_database_if_not_exists(database_url: str) -> bool:
     """Creates database if it does not exist
 
     Args:
         database_url: URL of the database to be created
 
     Returns:
-        A message indicating whether the database was created or not.
+        True if the database was created, False if it already exists
     """
     if not database_exists(database_url):
         create_database(database_url)
-        return "Database created"
+        return True
     else:
-        return "Database already exists"
+        return False
 
 
-def create_tables(database_url: str, base: declarative_base) -> str:
+def create_tables(database_url: str, base: declarative_base) -> bool:
     """Creates tables in the database.
 
     Args:
@@ -28,7 +28,7 @@ def create_tables(database_url: str, base: declarative_base) -> str:
         base: Base class for the models
 
     Returns:
-        A message indicating whether the tables were created or not.
+        True if the tables were created or already exist, False if an error occurred
 
     Raises:
         psycopg2.OperationalError: If the tables already exist
@@ -36,9 +36,9 @@ def create_tables(database_url: str, base: declarative_base) -> str:
     """
     try:
         engine = create_engine(database_url)
-        base.metadata.create_all(bind=engine)
-        return "Tables created"
-    except psycopg2.OperationalError:
-        return "Tables already exist"
+        base.metadata.create_all(bind=engine, checkfirst=True)
+        return True
+    except SQLAlchemyError:
+        return False
     except Exception as e:
-        return f"Error creating tables: {e}"
+        raise e

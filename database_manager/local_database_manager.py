@@ -1,13 +1,11 @@
-# from app.exceptions.custom_exceptions import DatabaseWriteError, DatabaseReadError
-# from app.models.database import SessionLocal
-# from app.models.file_model import FileRecord
-# from typing import List
 import datetime
 from typing import List
 from database_manager.abstract_database_manager import AbstractDatabaseManager
 from database_manager.schemas.database_entry import DatabaseEntry
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from database_manager.database_connection.local_database import SessionLocal
+from exceptions.database import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
 
 
 class LocalDatabaseManager(AbstractDatabaseManager):
@@ -17,11 +15,26 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         """Initialises the local database manager"""
         self.db = SessionLocal()
 
+    def check_database_connection(self) -> bool:
+        """Check if the database is connected.
+
+        Returns:
+            True if the database is connected.
+
+        Raises:
+            DatabaseConnectionError: If the database is not connected.
+        """
+        try:
+            self.db.execute(text("SELECT 1"))
+        except SQLAlchemyError as e:
+            raise DatabaseConnectionError(f'Error occurred while checking database connection: {e}')
+        return True
+
     def get_file_record(self, file_id: str) -> DatabaseEntry:
         """Get a file from the database.
 
         Args:
-            file_id: Id of the file to get
+            file_id: ID of the file to get
 
         Returns:
             File record which contains the file metadata.
@@ -30,7 +43,13 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             DatabaseReadError: If the file does not exist
         """
         # return self.db.query(FileRecord).filter(FileRecord.file_id == file_id).first()
-        record_query = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
+        try:
+            record_query = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
+            # raise error if the file does not exist (i.e. the query returns None)
+            if record_query is None:
+                raise DatabaseReadError(f'File with id {file_id} does not exist')
+        except SQLAlchemyError as e:
+            raise DatabaseReadError(f'Error occurred while reading file record: {e}')
         return record_query
 
     def get_all_file_records(self) -> List[DatabaseEntry]:
@@ -46,7 +65,7 @@ class LocalDatabaseManager(AbstractDatabaseManager):
 
         Args:
             name: Name of the file
-            file_id: Id of the file
+            file_id: ID of the file
             content_type: Content type of the file
             size: Size of the file
 
@@ -68,16 +87,21 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             last_modified_timestamp=created_timestamp_str
         )
 
-        self.db.add(file_record)
-        self.db.commit()
-        self.db.refresh(file_record)
+        try:
+            self.db.add(file_record)
+            self.db.commit()
+            self.db.refresh(file_record)
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseWriteError(f'Error occurred while creating file record: {e}')
+
         return file_record
 
     def update_file_record(self, file_id: str, name: str, content_type: str, size: int) -> str:
         """Update a file record in the database.
 
         Args:
-            file_id: Id of the file
+            file_id: ID of the file
             name: Name of the file
             content_type: Content type of the file
             size: Size of the file
@@ -90,7 +114,13 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             DatabaseReadError: If the file record does not exist
         """
 
-        file_record = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
+        try:
+            file_record = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
+            # raise error if the file does not exist (i.e. the query returns None)
+            if file_record is None:
+                raise DatabaseReadError(f'File with id {file_id} does not exist')
+        except SQLAlchemyError as e:
+            raise DatabaseReadError(f'Error occurred while reading file record: {e}')
 
         file_record.name = name
         file_record.content_type = content_type
@@ -98,15 +128,19 @@ class LocalDatabaseManager(AbstractDatabaseManager):
 
         file_record.last_modified_timestamp = datetime.datetime.now()
 
-        self.db.commit()
-        self.db.refresh(file_record)
+        try:
+            self.db.commit()
+            self.db.refresh(file_record)
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseWriteError(f'Error occurred while updating file record: {e}')
         return "File record updated successfully"
 
     def rename_file_record(self, file_id: str, new_file_id: str) -> str:
         """Rename a file record in the database.
 
         Args:
-            file_id: Id of the file
+            file_id: ID of the file
             new_file_id: New file id
 
         Returns:
@@ -117,28 +151,38 @@ class LocalDatabaseManager(AbstractDatabaseManager):
 
         file_record.file_id = new_file_id
 
-        # Format the timestamp as a string
-        last_modified_timestamp_str = datetime.datetime.now()
-        file_record.last_modified_timestamp = last_modified_timestamp_str
+        last_modified_timestamp = datetime.datetime.now()
+        file_record.last_modified_timestamp = last_modified_timestamp
 
-        self.db.commit()
-        self.db.refresh(file_record)
+        try:
+            self.db.commit()
+            self.db.refresh(file_record)
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseWriteError(f'Error occurred while renaming file record: {e}')
         return "File record renamed successfully"
 
     def delete_file_record(self, file_id: str) -> str:
         """Delete a file record in the database.
 
         Args:
-            file_id: Id of the file
+            file_id: ID of the file
 
         Returns:
             File record which contains the file metadata.
         """
 
         file_record = self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first()
+        # raise error if the file does not exist (i.e. the query returns None)
+        if file_record is None:
+            raise DatabaseReadError(f'File with id {file_id} does not exist')
 
-        self.db.delete(file_record)
-        self.db.commit()
+        try:
+            self.db.delete(file_record)
+            self.db.commit()
+        except SQLAlchemyError as e:
+            self.db.rollback()
+            raise DatabaseWriteError(f'Error occurred while deleting file record: {e}')
         return "File record deleted successfully"
 
     def delete_all_file_records(self) -> str:
@@ -151,10 +195,16 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             DatabaseWriteError: If the file record deletion fails
             DatabaseReadError: If the file record does not exist
         """
-        deleted_count = self.get_count()
+        try:
+            deleted_count = self.get_count()
 
-        self.db.query(DatabaseEntry).delete()
-        self.db.commit()
+            self.db.query(DatabaseEntry).delete()
+            self.db.commit()
+
+        except SQLAlchemyError as e:
+            # Roll back the transaction in case of an error
+            self.db.rollback()
+            raise DatabaseWriteError(f'Error occurred while deleting all file records: {e}')
 
         return f"All of the {deleted_count} file records have been deleted."
 
@@ -172,12 +222,13 @@ if __name__ == "__main__":
     # # Create a local database manager
     manager = LocalDatabaseManager()
 
+    # Check that the database is connected
+    manager.check_database_connection()
+
     # Get all file records
     file_records = manager.get_all_file_records()
     print(f'All file records are {file_records}')
 
     # Get a file record
-    file_record = manager.get_file_record("120")
-    print(f'File record is {file_record}')
-
-
+    file_record_ = manager.get_file_record("120")
+    print(f'File record is {file_record_}')
