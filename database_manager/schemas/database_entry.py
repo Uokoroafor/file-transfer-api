@@ -1,4 +1,3 @@
-import datetime
 from dataclasses import dataclass
 from typing import Dict, Any
 from sqlalchemy import Column, Integer, String, DateTime
@@ -38,3 +37,7 @@ class DatabaseEntry(Base):
             f"<FileRecord(id={self.id}, name={self.name}, file_id={self.file_id}, content_type={self.content_type}, "
             f"size={self.size}, created_timestamp={self.created_timestamp}, "
             f"last_modified_timestamp={self.last_modified_timestamp})>")
+
+# TODO: Remove superfluous ID column since file_id is already unique
+# TODO: Make file_id the primary key
+# TODO: Make content_type an enum

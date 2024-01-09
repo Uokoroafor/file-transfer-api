@@ -23,20 +23,17 @@ class FileUploadError(FileError):
 @dataclass
 class FileDeleteError(FileError):
     """Raised when a file delete operation fails."""
-
     description = "File delete failed"
 
 
 @dataclass
 class FileUpdateError(FileError):
     """Raised when a file update operation fails."""
-
     description = "File update failed"
 
 
 @dataclass
 class FileDoesNotExistError(FileError):
     """Raised when a file does not exist."""
-
     status_code: int = 404
     description: str = "File does not exist"

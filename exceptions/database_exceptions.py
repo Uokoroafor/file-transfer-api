@@ -5,7 +5,6 @@ from dataclasses import dataclass
 @dataclass
 class DatabaseError(BaseCustomException):
     """Base class for Database exceptions related exceptions"""
-
     pass
 
 
