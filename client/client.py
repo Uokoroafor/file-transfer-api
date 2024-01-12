@@ -16,7 +16,8 @@ class APIClient:
         self.base_url = base_url
         self.logger = ErrorLogger(log_file_path=error_logger_path, name="APIClient")
 
-    def request_handler(self, response: requests.Response, raw: bool = False) -> Union[FileIdAndPath, ByteString, ErrorResponse]:
+    def request_handler(self, response: requests.Response, raw: bool = False) -> Union[
+        FileIdAndPath, ByteString, ErrorResponse]:
         """Handle the response from the API.
 
         Args:
@@ -34,7 +35,7 @@ class APIClient:
                 return FileIdAndPath(file_id=response["file_id"],
                                      file_path=response["file_path"])
         else:
-            self.logger.log_error(f"Error uploading file: {response.status_code} - {response.json()['detail']}")
+            self.logger.log(f"Error uploading file: {response.status_code} - {response.json()['detail']}")
             return ErrorResponse(status_code=response.status_code,
                                  message=response.json()['detail'])
 
@@ -48,7 +49,7 @@ class APIClient:
             Response from the API.
         """
         with open(file_path, "rb") as f:
-            response = requests.post(self.base_url + "/files", files={"file": f})
+            response = requests.post(f"{self.base_url}/files", files={"file": f})
             return self.request_handler(response)
 
     def download_file(self, file_id: str) -> Union[ByteString, ErrorResponse]:
@@ -60,20 +61,20 @@ class APIClient:
         Returns:
             Response from the API.
         """
-        response = requests.get(self.base_url + f"/files/{file_id}")
+        response = requests.get(f"{self.base_url}/files/{file_id}")
         return self.request_handler(response, raw=True)
 
-    def rename_file(self, file_id: str, new_file_id: str) -> Union[FileIdAndPath, ErrorResponse]:
+    def rename_file(self, file_id: str, new_file_name: str) -> Union[FileIdAndPath, ErrorResponse]:
         """Rename a file in the API.
 
         Args:
             file_id: ID of the file to rename.
-            new_file_id: New ID of the file.
+            new_file_name: New ID of the file.
 
         Returns:
             Response from the API.
         """
-        response = requests.put(self.base_url + f"/files/{file_id}", params={"new_file_id": new_file_id})
+        response = requests.put(f"{self.base_url}/files/{file_id}", params={"new_file_name": new_file_name})
         return self.request_handler(response)
 
     def delete_file(self, file_id: str) -> Union[FileIdAndPath, ErrorResponse]:
@@ -85,14 +86,16 @@ class APIClient:
         Returns:
             Response from the API.
         """
-        response = requests.delete(self.base_url + f"/files/{file_id}")
+        response = requests.delete(f"{self.base_url}/files/{file_id}")
         return self.request_handler(response)
 
+
+# TODO: Use Marshmallow to validate the response from the API
 
 if __name__ == '__main__':
     client = APIClient(error_logger_path="../logs/errors.log")
     response1 = client.upload_file("../data/test.png")
-    response2 = client.download_file(response1.file_id+"1")
+    response2 = client.download_file(response1.file_id)
     response3 = client.rename_file(response1.file_id, "test2.png")
-    response4 = client.delete_file("test2.png")
+    response4 = client.delete_file(response1.file_id)
     pass

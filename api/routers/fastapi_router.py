@@ -14,6 +14,15 @@ file_manager = LocalFileManager()
 database_manager = LocalDatabaseManager()
 
 
+@router.on_event('startup')  # Only runs on startup
+async def on_start():
+    # Test the database connection
+    if not database_manager.check_database_connection():
+        print("Database connection failed")
+    else:
+        print("Database connection successful")
+
+
 @router.get("/")
 async def root() -> CustomMessage:
     return CustomMessage(message="Welcome to the API")
@@ -22,8 +31,10 @@ async def root() -> CustomMessage:
 @router.post("/")
 async def upload_file(file: UploadFile = File(...)) -> FileIdAndPath:
     try:
-        file_id, file_path = file_manager.upload_file(file.file)
+        file_path = file_manager.upload_file(file.file)
         file_details = get_file_details(file)
+
+        file_id = file_path.name
 
         # Create a database record
         database_manager.create_file_record(file_id=file_id, **file_details)
@@ -44,13 +55,11 @@ async def download_file(file_id: str) -> FileResponse:
 
 
 @router.put("/{file_id}")
-async def rename_file(file_id: str, new_file_id: str) -> FileIdAndPath:
+async def rename_file(file_id: str, new_file_name: str) -> FileIdAndPath:
     try:
-        # Rename the file
-        _ = file_manager.rename_file(file_id, new_file_id)
-
+        # No file manager operation required
         # Update the database record
-        database_manager.rename_file_record(file_id, new_file_id)
+        database_manager.rename_file_record(file_id, new_file_name)
         return FileIdAndPath(file_id=file_id)
     except BaseCustomException as e:
         e.raise_as_http()
@@ -59,7 +68,7 @@ async def rename_file(file_id: str, new_file_id: str) -> FileIdAndPath:
 @router.delete("/{file_id}")
 async def delete_file(file_id: str) -> FileIdAndPath:
     try:
-        file_id = file_manager.delete_file(file_id)
+        file_manager.delete_file(file_id)
 
         # Delete the database record
         database_manager.delete_file_record(file_id)

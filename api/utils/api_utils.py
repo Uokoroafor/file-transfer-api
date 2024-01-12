@@ -2,6 +2,8 @@ import mimetypes
 from typing import IO, Union, Dict, Any
 from fastapi import UploadFile, File
 
+from database_manager.schemas.content_enum import ContentEnum
+
 
 def get_file_details(file: UploadFile = File(...)) -> Dict[str, Any]:
     """Get metadata from a file.
@@ -14,11 +16,12 @@ def get_file_details(file: UploadFile = File(...)) -> Dict[str, Any]:
     """
     file_details = {
         "name": file.filename,
-        "content_type": file.content_type,
+        "content_type": ContentEnum.from_str(file.content_type) if file.content_type else None,
         "size": get_file_size(file.file),
     }
     if file_details["content_type"] is None:
-        file_details["content_type"] = mimetypes.guess_type(file_details["name"])[0]
+        print(f'Guessing content type for {file_details["name"]}')
+        file_details["content_type"] = ContentEnum.from_str(mimetypes.guess_type(file_details["name"])[0])
 
     return file_details
 
