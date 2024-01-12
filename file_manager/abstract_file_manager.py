@@ -6,7 +6,7 @@ from typing import Tuple, IO
 class AbstractFileManager(ABC):
 
     @abstractmethod
-    def upload_file(self, file: IO) -> Tuple[str, Path]:
+    def upload_file(self, file: IO) -> Path:
         pass
 
     @abstractmethod
@@ -14,11 +14,9 @@ class AbstractFileManager(ABC):
         pass
 
     @abstractmethod
-    def rename_file(self, file_id, new_file_id) -> Path:
+    def rename_file(self, file_id, new_file_id):
         pass
 
     @abstractmethod
-    def delete_file(self, file_id) -> str:
+    def delete_file(self, file_id):
         pass
-
-# TODO: Rationalise the return types of the methods in the AbstractFileManager class and its concrete implementations.
