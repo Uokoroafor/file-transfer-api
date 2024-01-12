@@ -74,11 +74,11 @@ def temp_rename_file(file_system):
 
 FIXED_TIMESTAMP = datetime(2021, 1, 1, 0, 0, 0, 0)
 TEST_RECORD_1 = {"name": "test_name_1", "file_id": "test_id_1", "content_type": ContentEnum.TEXT, "size": 1}
-RENAMED_TEST_RECORD_1 = TEST_RECORD_1.copy()
 TEST_RECORD_2 = {"name": "test_name_2", "file_id": "test_id_2", "content_type": ContentEnum.TEXT, "size": 2}
-NON_EXISTENT_TEST_RECORD = TEST_RECORD_1.copy()
-RENAMED_TEST_RECORD_1["name"] = "test_name_2"
-NON_EXISTENT_TEST_RECORD["file_id"] = "non_existent_id"
+
+# Create renamed and non-existent records using dictionary comprehension
+RENAMED_TEST_RECORD_1 = {**TEST_RECORD_1, "name": "test_name_2"}
+NON_EXISTENT_TEST_RECORD = {**TEST_RECORD_1, "file_id": "non_existent_id"}
 
 
 @pytest.fixture(scope="session")
