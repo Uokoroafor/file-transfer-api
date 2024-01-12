@@ -1,61 +1,10 @@
-import tempfile
 from io import BytesIO
 from pathlib import Path
 from unittest.mock import patch
 import pytest
 from exceptions.file_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileUpdateError, \
     FileDeleteError
-from file_manager.local_file_manager import LocalFileManager
-
-DATA_DIR = Path("tests/test_fixtures/data")
-UPLOAD_DIR = DATA_DIR / "uploads"
-DOWNLOAD_DIR = DATA_DIR / "downloads"
-
-
-@pytest.fixture(scope="session")
-def file_system():
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
-    yield
-
-    # Teardown: remove files and directories
-    for directory in [UPLOAD_DIR, DOWNLOAD_DIR, DATA_DIR]:
-        for file in directory.iterdir():
-            file.unlink()
-        directory.rmdir()
-
-
-@pytest.fixture(scope="session")
-def file_manager():
-    yield LocalFileManager()
-
-
-@pytest.fixture
-def temp_file(file_system):
-    with tempfile.NamedTemporaryFile(dir=DATA_DIR, delete=False) as f:
-        f.write(b"test data")
-        f.flush()
-    yield f.name
-
-
-@pytest.fixture
-def temp_upload_file(file_system):
-    # Write a temporary file to the upload directory and yield the file location
-    with tempfile.NamedTemporaryFile(dir=UPLOAD_DIR, delete=False) as f:
-        f.write(b"test data")
-        f.flush()
-    yield f.name
-
-
-@pytest.fixture
-def temp_rename_file(file_system):
-    # Write a temporary file to the data directory and yield the file location
-    with tempfile.NamedTemporaryFile(dir=UPLOAD_DIR, delete=False) as f:
-        f.write(b"test data")
-        f.flush()
-    yield f.name
+from tests.conftest import UPLOAD_DIR, DOWNLOAD_DIR, file_manager, temp_file, temp_upload_file, temp_rename_file
 
 
 @patch("file_manager.local_file_manager.upload_path", UPLOAD_DIR)
