@@ -18,7 +18,7 @@ UPLOAD_DIR = DATA_DIR / "uploads"
 DOWNLOAD_DIR = DATA_DIR / "downloads"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def file_system():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
