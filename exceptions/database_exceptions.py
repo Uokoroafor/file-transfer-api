@@ -11,7 +11,8 @@ class DatabaseError(BaseCustomException):
 @dataclass
 class DatabaseReadError(DatabaseError):
     """Raised when a database read operation fails"""
-    description = "Database read failed"
+    status_code: int = 404
+    description: str = "Database read failed"
 
 
 @dataclass
