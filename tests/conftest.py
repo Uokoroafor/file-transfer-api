@@ -1,11 +1,9 @@
 import tempfile
-import warnings
 from datetime import datetime
 from pathlib import Path
 
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.exc import SAWarning
 from sqlalchemy.orm import sessionmaker
 
 from database_manager.database_connection.local_database import Base
@@ -13,12 +11,6 @@ from database_manager.local_database_manager import LocalDatabaseManager
 from database_manager.schemas.content_enum import ContentEnum
 from database_manager.schemas.database_entry import DatabaseEntry
 from file_manager.local_file_manager import LocalFileManager
-
-
-def pytest_configure(config):
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
-    warnings.filterwarnings("ignore", category=UserWarning)
-    warnings.filterwarnings("ignore", category=SAWarning)
 
 
 DATA_DIR = Path("tests/test_fixtures/data")
