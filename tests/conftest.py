@@ -13,54 +13,51 @@ from database_manager.schemas.database_entry import DatabaseEntry
 from file_manager.local_file_manager import LocalFileManager
 
 
-DATA_DIR = Path("tests/test_fixtures/data")
-UPLOAD_DIR = DATA_DIR / "uploads"
-DOWNLOAD_DIR = DATA_DIR / "downloads"
+@pytest.fixture(scope="function")
+def file_system():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_dir_path = Path(temp_dir)
+        data_dir = temp_dir_path / "data"
+        upload_dir = data_dir / "uploads"
+        download_dir = data_dir / "downloads"
+
+        # Create the directories
+        data_dir.mkdir(parents=True, exist_ok=True)
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        download_dir.mkdir(parents=True, exist_ok=True)
+
+        # Yield the directory paths for use in tests
+        yield data_dir, upload_dir, download_dir
 
 
 @pytest.fixture(scope="function")
-def file_system():
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
-    yield
-
-    # Teardown: remove files and directories
-    for directory in [UPLOAD_DIR, DOWNLOAD_DIR, DATA_DIR]:
-        for file in directory.iterdir():
-            file.unlink()
-        directory.rmdir()
-
-
-@pytest.fixture(scope="session")
 def file_manager():
-    yield LocalFileManager()
+    return LocalFileManager()
 
 
 @pytest.fixture
 def temp_file(file_system):
-    with tempfile.NamedTemporaryFile(dir=DATA_DIR, delete=False) as f:
+    data_dir, upload_dir, download_dir = file_system
+    with tempfile.NamedTemporaryFile(dir=data_dir, delete=False) as f:
         f.write(b"test data")
-        f.flush()
     yield f.name
 
 
 @pytest.fixture
 def temp_upload_file(file_system):
     # Write a temporary file to the upload directory and yield the file location
-    with tempfile.NamedTemporaryFile(dir=UPLOAD_DIR, delete=False) as f:
+    data_dir, upload_dir, download_dir = file_system
+    with tempfile.NamedTemporaryFile(dir=upload_dir, delete=False) as f:
         f.write(b"test data")
-        f.flush()
     yield f.name
 
 
 @pytest.fixture
 def temp_rename_file(file_system):
     # Write a temporary file to the data directory and yield the file location
-    with tempfile.NamedTemporaryFile(dir=UPLOAD_DIR, delete=False) as f:
+    data_dir, upload_dir, download_dir = file_system
+    with tempfile.NamedTemporaryFile(dir=upload_dir, delete=False) as f:
         f.write(b"test data")
-        f.flush()
     yield f.name
 
 
@@ -71,6 +68,27 @@ TEST_RECORD_2 = {"name": "test_name_2", "file_id": "test_id_2", "content_type": 
 # Create renamed and non-existent records using dictionary comprehension
 RENAMED_TEST_RECORD_1 = {**TEST_RECORD_1, "name": "test_name_2"}
 NON_EXISTENT_TEST_RECORD = {**TEST_RECORD_1, "file_id": "non_existent_id"}
+
+
+# Convert the records to pytest fixtures
+@pytest.fixture(scope="session")
+def test_record_1():
+    return TEST_RECORD_1
+
+
+@pytest.fixture(scope="session")
+def test_record_2():
+    return TEST_RECORD_2
+
+
+@pytest.fixture(scope="session")
+def renamed_test_record_1():
+    return RENAMED_TEST_RECORD_1
+
+
+@pytest.fixture(scope="session")
+def non_existent_test_record():
+    return NON_EXISTENT_TEST_RECORD
 
 
 @pytest.fixture(scope="session")
