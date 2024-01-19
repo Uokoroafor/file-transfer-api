@@ -1,11 +1,12 @@
 from typing import Tuple, IO
+import shutil
 
 from file_manager.abstract_file_manager import AbstractFileManager
 from uuid import uuid4
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from exceptions.file import FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError, FileUpdateError
+from exceptions.file_exceptions import FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError, FileUpdateError
 
 load_dotenv()
 
@@ -14,7 +15,7 @@ download_path = Path(os.getenv("DOWNLOAD_DIRECTORY"))
 
 
 class LocalFileManager(AbstractFileManager):
-    def upload_file(self, file: IO) -> Tuple[str, Path]:
+    def upload_file(self, file: IO) -> Path:
         # generate a file id
         file_id = str(uuid4())
         file_location = upload_path / file_id
@@ -27,23 +28,22 @@ class LocalFileManager(AbstractFileManager):
             # return the file id and the file path
         except IOError as e:
             raise FileUploadError(f'Error occurred while uploading file: {e}')
-        return file_id, file_location
+        return file_location
 
     def download_file(self, file_id: str) -> Path:
         # Copy the file to the download path and return the path
+        upload_file_path = upload_path / file_id
         download_file_path = download_path / file_id
 
         try:
-            with open(f'{upload_path}/{file_id}', 'rb') as f:
-                with open(download_file_path, 'wb') as g:
-                    g.write(f.read())
+            shutil.copy(upload_file_path, download_file_path)
         except FileNotFoundError:
             raise FileDoesNotExistError(f'File with id {file_id} does not exist')
         except IOError as e:
             raise FileDownloadError(f'Error occurred while downloading file: {e}')
         return download_file_path
 
-    def rename_file(self, file_id: str, new_file_id: str) -> str:
+    def rename_file(self, file_id: str, new_file_id: str):
         old_file_location = upload_path / file_id
         new_file_location = upload_path / new_file_id
 
@@ -54,17 +54,14 @@ class LocalFileManager(AbstractFileManager):
         except IOError as e:
             raise FileUpdateError(f'Error occurred while renaming file: {e}')
 
-        return new_file_id
-
-    def delete_file(self, file_id: str) -> str:
+    def delete_file(self, file_id: str):
         file_location = upload_path / file_id
         try:
             file_location.unlink()
         except FileNotFoundError:
             raise FileDoesNotExistError(f'File with id {file_id} does not exist')
-        except IOError as e:
+        except OSError as e:
             raise FileDeleteError(f'Error occurred while deleting file: {e}')
-        return file_id
 
 # if __name__ == "__main__":
 #     if not os.path.exists(upload_path):

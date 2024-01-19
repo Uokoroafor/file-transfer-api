@@ -15,6 +15,7 @@ class CustomMessage:
     """Response model for standard responses"""
     message: str
 
+
 @dataclass
 class ErrorResponse:
     """Response model for standard responses"""

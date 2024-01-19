@@ -31,7 +31,6 @@ def create_tables(database_url: str, base: declarative_base) -> bool:
         True if the tables were created or already exist, False if an error occurred
 
     Raises:
-        psycopg2.OperationalError: If the tables already exist
         Exception: If any other error occurs
     """
     try:

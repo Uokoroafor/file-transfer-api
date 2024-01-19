@@ -1,11 +1,12 @@
 import datetime
 from typing import List
 from database_manager.abstract_database_manager import AbstractDatabaseManager
+from database_manager.schemas.content_enum import ContentEnum
 from database_manager.schemas.database_entry import DatabaseEntry
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from database_manager.database_connection.local_database import SessionLocal
-from exceptions.database import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
+from exceptions.database_exceptions import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
 
 
 class LocalDatabaseManager(AbstractDatabaseManager):
@@ -60,7 +61,7 @@ class LocalDatabaseManager(AbstractDatabaseManager):
         """
         return self.db.query(DatabaseEntry).all()
 
-    def create_file_record(self, name: str, file_id: str, content_type: str, size: int) -> DatabaseEntry:
+    def create_file_record(self, name: str, file_id: str, content_type: ContentEnum, size: int) -> DatabaseEntry:
         """Create a file record in the database.
 
         Args:
@@ -87,6 +88,10 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             last_modified_timestamp=created_timestamp_str
         )
 
+        # Check if the file record already exists
+        if self.db.query(DatabaseEntry).filter(DatabaseEntry.file_id == file_id).first() is not None:
+            raise DatabaseWriteError(f'File with id {file_id} already exists')
+
         try:
             self.db.add(file_record)
             self.db.commit()
@@ -97,7 +102,7 @@ class LocalDatabaseManager(AbstractDatabaseManager):
 
         return file_record
 
-    def update_file_record(self, file_id: str, name: str, content_type: str, size: int) -> str:
+    def update_file_record(self, file_id: str, name: str, content_type: ContentEnum, size: int) -> str:
         """Update a file record in the database.
 
         Args:
@@ -136,12 +141,12 @@ class LocalDatabaseManager(AbstractDatabaseManager):
             raise DatabaseWriteError(f'Error occurred while updating file record: {e}')
         return "File record updated successfully"
 
-    def rename_file_record(self, file_id: str, new_file_id: str) -> str:
+    def rename_file_record(self, file_id: str, new_file_name: str) -> str:
         """Rename a file record in the database.
 
         Args:
             file_id: ID of the file
-            new_file_id: New file id
+            new_file_name: New name of the file
 
         Returns:
             File record which contains the file metadata.
@@ -149,7 +154,7 @@ class LocalDatabaseManager(AbstractDatabaseManager):
 
         file_record = self.get_file_record(file_id)
 
-        file_record.file_id = new_file_id
+        file_record.name = new_file_name
 
         last_modified_timestamp = datetime.datetime.now()
         file_record.last_modified_timestamp = last_modified_timestamp

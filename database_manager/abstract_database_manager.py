@@ -36,12 +36,12 @@ class AbstractDatabaseManager(ABC):
         pass
 
     @abstractmethod
-    def rename_file_record(self, file_id: str, new_file_id: str) -> str:
+    def rename_file_record(self, file_id: str, new_name: str) -> str:
         """Abstract method to change a file record's file id.
 
         Args:
             file_id: Id of the file record to change
-            new_file_id: New file id
+            new_name: New name of the file record
 
         Returns:
             File record which contains the file metadata.
