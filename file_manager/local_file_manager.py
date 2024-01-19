@@ -60,7 +60,7 @@ class LocalFileManager(AbstractFileManager):
             file_location.unlink()
         except FileNotFoundError:
             raise FileDoesNotExistError(f'File with id {file_id} does not exist')
-        except IOError as e:
+        except OSError as e:
             raise FileDeleteError(f'Error occurred while deleting file: {e}')
 
 # if __name__ == "__main__":
