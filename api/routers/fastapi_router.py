@@ -8,6 +8,7 @@ from schemas.custom_responses import FileIdAndPath, CustomMessage
 from api.utils.api_utils import get_file_details
 
 from exceptions.custom_exception import BaseCustomException
+from exceptions.database_exceptions import DatabaseConnectionError
 
 router = APIRouter()
 file_manager = LocalFileManager()
@@ -19,6 +20,8 @@ async def on_start():
     # Test the database connection
     if not database_manager.check_database_connection():
         print("Database connection failed")
+        # Raise an exception if the database connection fails
+        DatabaseConnectionError("Database connection failed").raise_as_http()
     else:
         print("Database connection successful")
 

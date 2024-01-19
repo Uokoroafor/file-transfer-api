@@ -2,23 +2,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from api.api import app
-from tests.conftest import temp_file, file_system
 
-
-# Test all the endpoints
-
-# GET Root
-# GET /files
-# GET /files/{file_id}
-
-# POST /files
-
-# PUT /files/{file_id}
-
-# DELETE /files/{file_id}
 
 class TestAPI:
-    @pytest.fixture(scope="session")
+    @pytest.fixture(scope="function")
     def client(self):
         with TestClient(app) as client:
             yield client
@@ -77,5 +64,3 @@ class TestAPI:
         response = client.delete(f"/files/nonexistent_file")
         assert response.status_code == 404
         assert "detail" in response.json()
-
-
