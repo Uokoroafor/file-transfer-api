@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from database_manager.schemas.content_enum import ContentEnum
 
 load_dotenv()  # Load the variables from .env
-TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME")
+TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME", "files") # The tablename will default to "files" if not specified in .env
 
 
 @dataclass

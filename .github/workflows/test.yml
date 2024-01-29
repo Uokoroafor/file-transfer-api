@@ -1,0 +1,31 @@
+name: Testing
+
+on:
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install dependencies with Poetry
+      run: poetry install
+    - name: Test with pytest and coverage
+      run: |
+        poetry run coverage run -m pytest
+        poetry run coverage xml
+    - name: Upload coverage to GitHub Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: coverage.xml

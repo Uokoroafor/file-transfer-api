@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Load the variables from .env
 
-DATABASE_URL = os.getenv("LOCAL_DATABASE_URL")
+DATABASE_URL = os.getenv("LOCAL_DATABASE_URL", default="sqlite:///./test.db")
 
 # Create the SQLAlchemy engine
 engine = create_engine(DATABASE_URL)

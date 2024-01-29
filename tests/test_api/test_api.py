@@ -1,25 +1,43 @@
 import pytest
 from fastapi.testclient import TestClient
-
 from api.api import app
 
 
 class TestAPI:
+
+    @pytest.fixture(autouse=True, scope="function")
+    def setup_file_system(self, monkeypatch, file_system):
+        data_dir, upload_dir, download_dir = file_system
+        monkeypatch.setattr("file_manager.local_file_manager.upload_path", upload_dir)
+        monkeypatch.setattr("file_manager.local_file_manager.download_path", download_dir)
+
+        yield
+
+        # Unpatch all
+        monkeypatch.undo()
+
+    @pytest.fixture(autouse=True, scope="function")
+    def setup_database_manager(self, monkeypatch, test_db_session):
+        # monkeypatch.setattr("api.routers.fastapi_router.database_manager", test_db_manager)
+        monkeypatch.setattr("api.routers.fastapi_router.database_manager.db", test_db_session)
+
+        yield
+
+        # Unpatch all
+        monkeypatch.undo()
+
     @pytest.fixture(scope="function")
     def client(self):
         with TestClient(app) as client:
             yield client
 
     @pytest.fixture(scope="function")
-    def uploaded_file(self, client, temp_file, file_system):
-        # Upload a file and yield the file_id
-        with open(temp_file, "rb") as f:
-            response = client.post(f"/files/", files={"file": f})
-        file_id = response.json().get("file_id")
-        yield file_id
-
-        # Teardown: delete the file
-        client.delete(f"/files/{file_id}")
+    def uploaded_file(self, client, file_system, test_database_entry):
+        # Put a file in upload directory and write it to database and yield the file_id
+        data_dir, upload_dir, download_dir = file_system
+        with open(upload_dir / "test_id_1", "wb") as f:
+            f.write(b"test data")
+        yield "test_id_1"
 
     # Get root endpoint
     def test_root_endpoint_returns_200_and_welcome_message(self, client):
