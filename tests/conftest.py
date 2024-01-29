@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, StaticPool
 from sqlalchemy.orm import sessionmaker
 
 from database_manager.database_connection.local_database import Base
@@ -91,14 +91,15 @@ def non_existent_test_record():
     return NON_EXISTENT_TEST_RECORD
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_engine():
-    return create_engine('sqlite:///:memory:')
+    engine = create_engine('sqlite:///:memory:', connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    Base.metadata.create_all(engine)  # Create tables
+    return engine
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_db_session(test_engine):
-    Base.metadata.create_all(test_engine)  # Create tables
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
     db = SessionLocal()
     try:
