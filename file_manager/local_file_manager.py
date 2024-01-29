@@ -10,8 +10,8 @@ from exceptions.file_exceptions import FileDownloadError, FileUploadError, FileD
 
 load_dotenv()
 
-upload_path = Path(os.getenv("UPLOAD_DIRECTORY"))
-download_path = Path(os.getenv("DOWNLOAD_DIRECTORY"))
+upload_path = Path(os.getenv("UPLOAD_DIRECTORY", default="data/uploads"))
+download_path = Path(os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads"))
 
 
 class LocalFileManager(AbstractFileManager):
