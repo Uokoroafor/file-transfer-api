@@ -19,6 +19,7 @@ psycopg2-binary = "^2.9.9"
 pytest = "^7.4.4"
 requests-mock = "^1.11.0"
 coverage = "^7.4.1"
+httpx = "^0.26.0"
 
 [tool.pytest.ini_options]
 filterwarnings = [
