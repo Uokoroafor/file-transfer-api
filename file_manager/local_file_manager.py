@@ -1,4 +1,4 @@
-from typing import Tuple, IO
+from typing import IO
 import shutil
 
 from file_manager.abstract_file_manager import AbstractFileManager
@@ -6,7 +6,8 @@ from uuid import uuid4
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from exceptions.file_exceptions import FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError, FileUpdateError
+from exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
+                                        FileUpdateError)
 
 load_dotenv()
 
@@ -62,26 +63,3 @@ class LocalFileManager(AbstractFileManager):
             raise FileDoesNotExistError(f'File with id {file_id} does not exist')
         except OSError as e:
             raise FileDeleteError(f'Error occurred while deleting file: {e}')
-
-# if __name__ == "__main__":
-#     if not os.path.exists(upload_path):
-#         os.makedirs(upload_path)
-#     # create a local file manager
-#     local_file_manager = LocalFileManager()
-#
-#     # upload a file
-#     with open('../data/test.png', 'rb') as f:
-#         file_id, file_path = local_file_manager.upload_file(f)
-#     print(f'Uploaded file with id {file_id} to path {file_path}')
-#
-#     # download a file
-#     file = local_file_manager.download_file(file_id)
-#     print(file)
-#     print(f'Downloaded file with id {file_id}')
-#
-#     # rename a file
-#     new_file_id = local_file_manager.rename_file(file_id, 'new_file_id')
-#
-#     # delete a file
-#     local_file_manager.delete_file(new_file_id)
-#     print(f'Deleted file with id {new_file_id}')

@@ -95,11 +95,3 @@ class APIClient:
 
 
 # TODO: Use Marshmallow to validate the response from the API
-
-if __name__ == '__main__':
-    client = APIClient(error_logger_path="../logs/errors.log")
-    response1 = client.upload_file("../data/test.png")
-    response2 = client.download_file(response1.file_id)
-    response3 = client.rename_file(response1.file_id, "test2.png")
-    response4 = client.delete_file(response1.file_id)
-    pass
