@@ -5,7 +5,7 @@
 echo "Setting up local database..."
 
 # Run the setup_local_database.py script
-poetry run python -m database_manager.utils.setup_local_db
+poetry run python -m file_transfer_api.src.database_manager.utils.setup_local_db
 
 # Capture exit code
 EXIT_CODE=$?
