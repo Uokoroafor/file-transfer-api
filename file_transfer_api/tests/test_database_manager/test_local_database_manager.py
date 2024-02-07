@@ -1,8 +1,8 @@
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
-from file_transfer_api.src.database_manager.schemas.database_entry import DatabaseEntry
-from file_transfer_api.src.exceptions.database_exceptions import DatabaseReadError, DatabaseWriteError
+from src.database_manager.schemas.database_entry import DatabaseEntry
+from src.exceptions.database_exceptions import DatabaseReadError, DatabaseWriteError
 
 
 class TestLocalDatabaseManager:

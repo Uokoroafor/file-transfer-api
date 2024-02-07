@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from file_transfer_api.src.api.api import app
+from src.api.api import app
 
 
 class TestAPI:
@@ -8,8 +8,8 @@ class TestAPI:
     @pytest.fixture(autouse=True, scope="function")
     def setup_file_system(self, monkeypatch, file_system):
         data_dir, upload_dir, download_dir = file_system
-        monkeypatch.setattr("file_transfer_api.src.file_manager.local_file_manager.upload_path", upload_dir)
-        monkeypatch.setattr("file_transfer_api.src.file_manager.local_file_manager.download_path", download_dir)
+        monkeypatch.setattr("src.file_manager.local_file_manager.upload_path", upload_dir)
+        monkeypatch.setattr("src.file_manager.local_file_manager.download_path", download_dir)
 
         yield
 
@@ -19,7 +19,7 @@ class TestAPI:
     @pytest.fixture(autouse=True, scope="function")
     def setup_database_manager(self, monkeypatch, test_db_session):
         # monkeypatch.setattr("api.routers.fastapi_router.database_manager", test_db_manager)
-        monkeypatch.setattr("file_transfer_api.src.api.routers.fastapi_router.database_manager.db", test_db_session)
+        monkeypatch.setattr("src.api.routers.fastapi_router.database_manager.db", test_db_session)
 
         yield
 

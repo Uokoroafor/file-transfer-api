@@ -4,8 +4,8 @@ import tempfile
 import pytest
 import requests_mock
 
-from file_transfer_api.src.client.client import APIClient
-from file_transfer_api.src.schemas.custom_responses import FileIdAndPath, ErrorResponse
+from src.client.client import APIClient
+from src.schemas.custom_responses import FileIdAndPath, ErrorResponse
 
 base_url = "http://test_url"   # "http://127.0.0.1:8000"
 

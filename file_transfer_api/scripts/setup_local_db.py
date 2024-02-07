@@ -1,11 +1,13 @@
 # Imports
 import os
 from dotenv import load_dotenv
-from file_transfer_api.src.database_manager.utils.database_utils import create_database_if_not_exists, create_tables
-from file_transfer_api.src.database_manager.schemas.database_entry import DatabaseEntry
+from src.database_manager.utils.database_utils import create_database_if_not_exists, create_tables
+from src.database_manager.schemas.database_entry import DatabaseEntry
 
-if __name__ == '__main__':
-    # Script to create a local database and table if they do not exist
+
+# TODO: Remove dependency on dotenv throughout the project
+def main():
+    """Script to create a local database and table if they do not exist"""
 
     # Load the variables from .env
     load_dotenv()
@@ -17,3 +19,8 @@ if __name__ == '__main__':
     # Create the table if it doesn't exist
     outcome2 = create_tables(os.getenv("LOCAL_DATABASE_URL"), DatabaseEntry)
     print(f'Table Creation Outcome: {outcome2}')
+
+
+if __name__ == '__main__':
+    # Run the script
+    main()

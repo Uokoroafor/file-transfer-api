@@ -1,4 +1,4 @@
-from file_transfer_api.src.exceptions.custom_exception import BaseCustomException
+from src.exceptions.custom_exception import BaseCustomException
 from dataclasses import dataclass
 
 

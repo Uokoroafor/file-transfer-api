@@ -2,7 +2,7 @@ import mimetypes
 from typing import IO, Union, Dict, Any
 from fastapi import UploadFile, File
 
-from file_transfer_api.src.database_manager.schemas.content_enum import ContentEnum
+from src.database_manager.schemas.content_enum import ContentEnum
 
 
 def get_file_details(file: UploadFile = File(...)) -> Dict[str, Any]:

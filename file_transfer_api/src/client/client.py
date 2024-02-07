@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Optional, Union, ByteString
 import requests
 
-from file_transfer_api.src.schemas.custom_responses import FileIdAndPath, ErrorResponse
-from file_transfer_api.src.utils.logging_utils import ErrorLogger
+from src.schemas.custom_responses import FileIdAndPath, ErrorResponse
+from src.utils.logging_utils import ErrorLogger
 
 
 class APIClient:

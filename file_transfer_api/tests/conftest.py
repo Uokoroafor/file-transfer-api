@@ -6,11 +6,11 @@ import pytest
 from sqlalchemy import create_engine, StaticPool
 from sqlalchemy.orm import sessionmaker
 
-from file_transfer_api.src.database_manager.database_connection.local_database import Base
-from file_transfer_api.src.database_manager.local_database_manager import LocalDatabaseManager
-from file_transfer_api.src.database_manager.schemas.content_enum import ContentEnum
-from file_transfer_api.src.database_manager.schemas.database_entry import DatabaseEntry
-from file_transfer_api.src.file_manager.local_file_manager import LocalFileManager
+from src.database_manager.database_connection.local_database import Base
+from src.database_manager.local_database_manager import LocalDatabaseManager
+from src.database_manager.schemas.content_enum import ContentEnum
+from src.database_manager.schemas.database_entry import DatabaseEntry
+from src.file_manager.local_file_manager import LocalFileManager
 
 
 @pytest.fixture(scope="function")

@@ -1,9 +1,8 @@
 [tool.poetry]
-name = "photos-api"
+name = "filetransferapi"
 version = "0.1.0"
-description = "A Fast API based API"
+description = "A FastAPI based API"
 authors = ["Ugo Okoroafor <39538470+Uokoroafor@users.noreply.github.com>"]
-license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -21,6 +20,10 @@ coverage = "^7.4.1"
 httpx = "^0.26.0"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.0"
+
+[tool.poetry.scripts]
+launch-api = "scripts.launch_api:main"
+setup-local-db = "scripts.setup_local_db:main"
 
 
 [tool.pytest.ini_options]

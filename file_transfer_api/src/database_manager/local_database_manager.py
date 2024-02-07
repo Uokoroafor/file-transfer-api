@@ -1,12 +1,12 @@
 import datetime
 from typing import List
-from file_transfer_api.src.database_manager.abstract_database_manager import AbstractDatabaseManager
-from file_transfer_api.src.database_manager.schemas.content_enum import ContentEnum
-from file_transfer_api.src.database_manager.schemas.database_entry import DatabaseEntry
+from src.database_manager.abstract_database_manager import AbstractDatabaseManager
+from src.database_manager.schemas.content_enum import ContentEnum
+from src.database_manager.schemas.database_entry import DatabaseEntry
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from file_transfer_api.src.database_manager.database_connection.local_database import SessionLocal
-from file_transfer_api.src.exceptions.database_exceptions import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
+from src.database_manager.database_connection.local_database import SessionLocal
+from src.exceptions.database_exceptions import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
 
 
 class LocalDatabaseManager(AbstractDatabaseManager):

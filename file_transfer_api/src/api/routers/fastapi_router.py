@@ -1,14 +1,14 @@
 from fastapi import APIRouter, File, UploadFile
 from fastapi.responses import FileResponse
 
-from file_transfer_api.src.file_manager.local_file_manager import LocalFileManager
-from file_transfer_api.src.database_manager.local_database_manager import LocalDatabaseManager
+from src.file_manager.local_file_manager import LocalFileManager
+from src.database_manager.local_database_manager import LocalDatabaseManager
 
-from file_transfer_api.src.schemas.custom_responses import FileIdAndPath, CustomMessage
-from file_transfer_api.src.api.utils.api_utils import get_file_details
+from src.schemas.custom_responses import FileIdAndPath, CustomMessage
+from src.api.utils.api_utils import get_file_details
 
-from file_transfer_api.src.exceptions.custom_exception import BaseCustomException
-from file_transfer_api.src.exceptions.database_exceptions import DatabaseConnectionError
+from src.exceptions.custom_exception import BaseCustomException
+from src.exceptions.database_exceptions import DatabaseConnectionError
 
 router = APIRouter()
 file_manager = LocalFileManager()

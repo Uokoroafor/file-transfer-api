@@ -1,12 +1,12 @@
 from typing import IO
 import shutil
 
-from file_transfer_api.src.file_manager.abstract_file_manager import AbstractFileManager
+from src.file_manager.abstract_file_manager import AbstractFileManager
 from uuid import uuid4
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from file_transfer_api.src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
+from src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
                                         FileUpdateError)
 
 load_dotenv()

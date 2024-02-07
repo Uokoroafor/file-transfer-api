@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from file_transfer_api.src.database_manager.schemas.database_entry import DatabaseEntry
+from src.database_manager.schemas.database_entry import DatabaseEntry
 
 
 class AbstractDatabaseManager(ABC):

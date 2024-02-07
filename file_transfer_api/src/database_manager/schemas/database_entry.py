@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Dict, Any
 from sqlalchemy import Column, Integer, String, DateTime, Enum
-from file_transfer_api.src.database_manager.database_connection.local_database import Base
+from src.database_manager.database_connection.local_database import Base
 import os
 from dotenv import load_dotenv
-from file_transfer_api.src.database_manager.schemas.content_enum import ContentEnum
+from src.database_manager.schemas.content_enum import ContentEnum
 
 load_dotenv()  # Load the variables from .env
 TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME", "files") # The tablename will default to "files" if not specified in .env

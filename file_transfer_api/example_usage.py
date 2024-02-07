@@ -1,5 +1,5 @@
 import os
-from file_transfer_api.src.client.client import APIClient
+from src.client.client import APIClient
 
 # Initialise the Client
 client = APIClient(error_logger_path="logs/errors.log")

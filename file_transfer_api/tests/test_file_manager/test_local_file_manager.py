@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from file_transfer_api.src.exceptions.file_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileUpdateError, \
+from src.exceptions.file_exceptions import FileUploadError, FileDoesNotExistError, FileDownloadError, FileUpdateError, \
     FileDeleteError
 
 
@@ -12,8 +12,8 @@ class TestLocalFileManager:
     @pytest.fixture(autouse=True)
     def setup_method(self, monkeypatch, file_system):
         data_dir, upload_dir, download_dir = file_system
-        monkeypatch.setattr("file_transfer_api.src.file_manager.local_file_manager.upload_path", upload_dir)
-        monkeypatch.setattr("file_transfer_api.src.file_manager.local_file_manager.download_path", download_dir)
+        monkeypatch.setattr("src.file_manager.local_file_manager.upload_path", upload_dir)
+        monkeypatch.setattr("src.file_manager.local_file_manager.download_path", download_dir)
 
     def mock_function_failure(self, monkeypatch, function, exception):
         def mock_function(*args, **kwargs):
