@@ -18,10 +18,13 @@ jobs:
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-    - name: Install dependencies with Poetry
-      run: poetry install
-    - name: Test with pytest and coverage
+    - name: Install dependencies with Poetry for file_transfer_api
       run: |
+        cd file_transfer_api
+        poetry install
+    - name: Test with pytest and coverage for file_transfer_api
+      run: |
+        cd file_transfer_api
         poetry run coverage run -m pytest
         poetry run coverage xml
     - name: Upload coverage to GitHub Artifacts
