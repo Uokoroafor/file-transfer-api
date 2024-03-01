@@ -1,10 +1,7 @@
-from typing import Dict, Any
-
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base
 from sqlalchemy_utils import database_exists, create_database
-from sqlalchemy.exc import SQLAlchemyError
-from src.database_manager.schemas.database_entry import DatabaseEntry
 
 
 def create_database_if_not_exists(database_url: str) -> bool:
@@ -46,21 +43,4 @@ def create_tables(database_url: str, base: declarative_base) -> bool:
         raise e
 
 
-def get_database_entry_from_record_query(record_query: Dict[str, Any]) -> DatabaseEntry:
-    """Get a DatabaseEntry object from a record query.
 
-    Args:
-        record_query: Query result from the database
-
-    Returns:
-        DatabaseEntry object containing the file metadata
-    """
-    item = record_query.get('Item')
-    return DatabaseEntry(
-        file_id=item['file_id'],
-        name=item['name'],
-        content_type=item['content_type'],
-        size=item['size'],
-        created_timestamp=item['created_timestamp'],
-        last_modified_timestamp=item['last_modified_timestamp']
-    )

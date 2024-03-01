@@ -3,10 +3,10 @@ from typing import List
 from src.database_manager.abstract_database_manager import AbstractDatabaseManager
 from src.database_manager.schemas.content_enum import ContentEnum
 from src.database_manager.schemas.database_entry import DatabaseEntry
-from src.database_manager.database_connection.aws_database import table
+from src.database_manager.database_connection.aws_database import table, table_name #, dynamodb_resource
 from botocore.exceptions import ClientError
 from src.exceptions.database_exceptions import DatabaseWriteError, DatabaseReadError, DatabaseConnectionError
-from src.database_manager.utils.database_utils import get_database_entry_from_record_query
+from src.database_manager.utils.aws_database_utils import get_database_entry_from_record_query
 
 
 class AWSDatabaseManager(AbstractDatabaseManager):
@@ -15,6 +15,8 @@ class AWSDatabaseManager(AbstractDatabaseManager):
     def __init__(self):
         """Initialises the AWS database manager"""
         self.table = table
+        self.table_name = table_name
+        # self.dynamodb_resource = dynamodb_resource
 
     def check_database_connection(self) -> bool:
         """Check if the database is connected.
@@ -26,7 +28,7 @@ class AWSDatabaseManager(AbstractDatabaseManager):
             DatabaseConnectionError: If the database is not connected.
         """
         try:
-            self.table.describe_table()
+            table.meta.client.describe_table(TableName=table_name)
         except ClientError as e:
             raise DatabaseConnectionError(f'Error occurred while checking database connection: {e}')
         return True
@@ -113,7 +115,7 @@ class AWSDatabaseManager(AbstractDatabaseManager):
                 Item={
                     'file_id': file_id,
                     'name': new_name,
-                    'content_type': file_record.content_type,
+                    'content_type': file_record.content_type.value,
                     'size': file_record.size,
                     'created_timestamp': file_record.created_timestamp,
                     'last_modified_timestamp': last_modified_timestamp
@@ -141,3 +143,24 @@ class AWSDatabaseManager(AbstractDatabaseManager):
         except ClientError as e:
             raise DatabaseWriteError(f'Error occurred while deleting file record: {e}')
         return "File record deleted successfully"
+
+    def get_all_file_records(self) -> List[DatabaseEntry]:
+        """Get all file records from the database.
+
+        Returns:
+            A list of all file records in the database.
+
+        Raises:
+            DatabaseReadError: If an error occurs while reading the file records.
+        """
+        try:
+            records_query = self.table.scan()
+        except ClientError as e:
+            raise DatabaseReadError(f'Error occurred while reading file records: {e}')
+
+        # Return an empty list if there are no records
+        if not records_query['Items']:
+            return []
+        return [get_database_entry_from_record_query(record) for record in records_query['Items']]
+
+
