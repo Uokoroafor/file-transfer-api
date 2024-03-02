@@ -28,7 +28,7 @@ class AWSDatabaseManager(AbstractDatabaseManager):
             DatabaseConnectionError: If the database is not connected.
         """
         try:
-            table.meta.client.describe_table(TableName=table_name)
+            self.table.meta.client.describe_table(TableName=self.table_name)
         except ClientError as e:
             raise DatabaseConnectionError(f'Error occurred while checking database connection: {e}')
         return True
