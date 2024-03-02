@@ -8,7 +8,7 @@ from botocore.exceptions import NoCredentialsError
 from src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
                                             FileUpdateError)
 from src.file_manager.utils.url_utils import URLPath
-from typing import IO
+from typing import IO, Optional
 
 from dotenv import load_dotenv
 
@@ -19,8 +19,17 @@ download_path = os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads")
 
 
 class AWSFileManager(AbstractFileManager):
-    def __init__(self, s3_client: boto3.client, target_bucket: str):
-        self.client = s3_client
+    def __init__(self, target_bucket: str, s3_client: Optional[boto3.client] = None):
+        """Initialises the AWS file manager.
+
+        Args:
+            target_bucket: Name of the target bucket in AWS S3.
+            s3_client: AWS S3 client.
+        """
+        if s3_client is None:
+            self.client = boto3.client("s3")
+        else:
+            self.client = s3_client
         self.target_bucket = target_bucket
 
     def upload_file(self, file: IO) -> URLPath:
