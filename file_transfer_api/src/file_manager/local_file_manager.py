@@ -4,12 +4,10 @@ import shutil
 from src.file_manager.abstract_file_manager import AbstractFileManager
 from uuid import uuid4
 from pathlib import Path
-from dotenv import load_dotenv
 import os
 from src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
                                         FileUpdateError)
 
-load_dotenv()
 upload_path = Path(os.getenv("UPLOAD_DIRECTORY", default="data/uploads"))
 download_path = Path(os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads"))
 

@@ -10,10 +10,6 @@ from src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, 
 from src.file_manager.utils.url_utils import URLPath
 from typing import IO, Optional
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Get download location from the environment
 download_path = os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads")
 

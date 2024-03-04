@@ -20,7 +20,6 @@ requests-mock = "^1.11.0"
 coverage = "^7.4.1"
 httpx = "^0.26.0"
 psycopg2-binary = "^2.9.9"
-python-dotenv = "^1.0.0"
 
 [tool.poetry.scripts]
 launch-api = "scripts.launch_api:main"

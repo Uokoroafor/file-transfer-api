@@ -3,10 +3,9 @@ from typing import Dict, Any
 from sqlalchemy import Column, Integer, String, DateTime, Enum
 from src.database_manager.database_connection.local_database import Base
 import os
-from dotenv import load_dotenv
 from src.database_manager.schemas.content_enum import ContentEnum
 
-load_dotenv()  # Load the variables from .env
+# Load the environment variables
 TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME",
                        "files")  # The tablename will default to "files" if not specified in .env
 AWS_TABLE_NAME = os.getenv("AWS_DATABASE_TABLE_NAME",
