@@ -1,26 +1,24 @@
+import os
 from dataclasses import dataclass
 from typing import Dict, Any
-from sqlalchemy import Column, Integer, String, DateTime, Enum
-from src.database_manager.database_connection.local_database import Base
-import os
+
 from src.database_manager.schemas.content_enum import ContentEnum
 
 # Load the environment variables
-TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME",
-                       "files")  # The tablename will default to "files" if not specified in .env
+
+AWS_TABLE_NAME = os.getenv("AWS_DATABASE_TABLE_NAME")
 
 
 @dataclass
-class DatabaseEntry(Base):
-    """A dataclass for database entries"""
+class File:
+    """A dataclass for database entries into DynamoDB"""
 
-    __tablename__ = TABLE_NAME
-    file_id = Column(String, primary_key=True, unique=True, nullable=False)
-    name = Column(String, nullable=False)
-    content_type = Column(Enum(ContentEnum), nullable=False)
-    size = Column(Integer)
-    created_timestamp = Column(DateTime, nullable=False)
-    last_modified_timestamp = Column(DateTime, nullable=False)
+    file_id: str
+    name: str
+    content_type: ContentEnum
+    size: int
+    created_timestamp: str
+    last_modified_timestamp: str
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert the database entry to a dictionary.
@@ -35,6 +33,21 @@ class DatabaseEntry(Base):
             "size": self.size,
             "created_timestamp": self.created_timestamp,
             "last_modified_timestamp": self.last_modified_timestamp}
+
+    def to_dynamodb_item(self) -> Dict[str, Any]:
+        """Convert the database entry to a dictionary in DynamoDB format.
+
+        Returns:
+            Dictionary representation of the database entry in DynamoDB format.
+        """
+        return {
+            "file_id": {"S": self.file_id},
+            "name": {"S": self.name},
+            "content_type": {"S": str(self.content_type)},
+            "size": {"N": str(self.size)},
+            "created_timestamp": {"S": self.created_timestamp},
+            "last_modified_timestamp": {"S": self.last_modified_timestamp}
+        }
 
     def equal_to_dict(self, other: Dict[str, Any]) -> bool:
         """Check if the database entry is equal to a dictionary. It does not check the timestamps.
@@ -57,9 +70,43 @@ class DatabaseEntry(Base):
             f"last_modified_timestamp={self.last_modified_timestamp})>")
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, DatabaseEntry):
+        if isinstance(other, File):
             return (self.file_id == other.file_id
                     and self.name == other.name
                     and self.content_type == other.content_type
                     and self.size == other.size)
         return False
+
+
+def get_dynamodb_table_schema() -> Dict[str, Any]:
+    """ Output the schema of the table in DynamoDB format. This will be used to create an equivalent table in DynamoDB.
+
+    Returns:
+        Dictionary representation of the database entry in DynamoDB format.
+    """
+
+    table_name = AWS_TABLE_NAME
+    key_schema = [
+        {
+            'AttributeName': 'file_id',
+            'KeyType': 'HASH'
+        },
+    ]
+    attribute_definitions = [
+        {
+            'AttributeName': 'file_id',
+            'AttributeType': 'S'
+        }
+    ]
+
+    provisioned_throughput = {
+        'ReadCapacityUnits': 5,
+        'WriteCapacityUnits': 5
+    }
+
+    return {
+        'TableName': table_name,
+        'KeySchema': key_schema,
+        'AttributeDefinitions': attribute_definitions,
+        'ProvisionedThroughput': provisioned_throughput,
+    }

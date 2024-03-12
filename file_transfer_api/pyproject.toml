@@ -11,6 +11,7 @@ fastapi = "^0.105.0"
 uvicorn = "^0.25.0"
 python-multipart = "^0.0.6"
 sqlalchemy = "^2.0.23"
+boto3 = "^1.34.44"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -19,7 +20,6 @@ requests-mock = "^1.11.0"
 coverage = "^7.4.1"
 httpx = "^0.26.0"
 psycopg2-binary = "^2.9.9"
-python-dotenv = "^1.0.0"
 
 [tool.poetry.scripts]
 launch-api = "scripts.launch_api:main"

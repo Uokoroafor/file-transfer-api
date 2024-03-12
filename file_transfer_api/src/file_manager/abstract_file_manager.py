@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import IO
+from typing import IO, Union
+from src.file_manager.schemas.s3_uri import S3Uri
 
 
 class AbstractFileManager(ABC):
@@ -10,14 +11,14 @@ class AbstractFileManager(ABC):
     """
 
     @abstractmethod
-    def upload_file(self, file: IO) -> Path:
+    def upload_file(self, file: IO) -> Union[Path, S3Uri]:
         """Abstract method to upload a file.
 
         Args:
             file: File to upload
 
         Returns:
-            Path of the file uploaded.
+            Path of the file uploaded as a path object (if local) or a string (if remote).
         """
         pass
 
