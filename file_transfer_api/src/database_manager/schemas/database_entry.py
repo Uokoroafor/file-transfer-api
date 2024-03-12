@@ -8,8 +8,6 @@ from src.database_manager.schemas.content_enum import ContentEnum
 # Load the environment variables
 TABLE_NAME = os.getenv("LOCAL_DATABASE_TABLE_NAME",
                        "files")  # The tablename will default to "files" if not specified in .env
-AWS_TABLE_NAME = os.getenv("AWS_DATABASE_TABLE_NAME",
-                           "files")  # The tablename will default to "files" if not specified in .env
 
 
 @dataclass
@@ -65,37 +63,3 @@ class DatabaseEntry(Base):
                     and self.content_type == other.content_type
                     and self.size == other.size)
         return False
-
-
-def get_dynamodb_table_schema() -> Dict[str, Any]:
-    """ Output the schema of the table in DynamoDB format. This will be used to create an equivalent table in DynamoDB.
-
-    Returns:
-        Dictionary representation of the database entry in DynamoDB format.
-    """
-
-    table_name = AWS_TABLE_NAME
-    key_schema = [
-        {
-            'AttributeName': 'file_id',
-            'KeyType': 'HASH'
-        },
-    ]
-    attribute_definitions = [
-        {
-            'AttributeName': 'file_id',
-            'AttributeType': 'S'
-        }
-    ]
-
-    provisioned_throughput = {
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
-    }
-
-    return {
-        'TableName': table_name,
-        'KeySchema': key_schema,
-        'AttributeDefinitions': attribute_definitions,
-        'ProvisionedThroughput': provisioned_throughput,
-    }
