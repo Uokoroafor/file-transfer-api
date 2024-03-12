@@ -1,12 +1,12 @@
 from typing import Dict, Any
 
-from src.database_manager.schemas.database_entry import DatabaseEntry
+from src.database_manager.schemas.dynamodb_entry import File
 from botocore.exceptions import ClientError
 from boto3.resources.base import ServiceResource
 from src.database_manager.schemas.content_enum import ContentEnum
 
 
-def get_database_entry_from_record_query(record_query: Dict[str, Any]) -> DatabaseEntry:
+def get_database_entry_from_record_query(record_query: Dict[str, Any]) -> File:
     """Get a DatabaseEntry object from a record query.
 
     Args:
@@ -27,7 +27,7 @@ def get_database_entry_from_record_query(record_query: Dict[str, Any]) -> Databa
     if item is None:
         item = record_query
 
-    return DatabaseEntry(
+    return File(
         file_id=item['file_id'],
         name=item['name'],
         content_type=ContentEnum.from_str(item['content_type']),
@@ -38,7 +38,9 @@ def get_database_entry_from_record_query(record_query: Dict[str, Any]) -> Databa
 
 
 def create_dynamodb_table_if_not_exists(dynamodb: ServiceResource, table_schema: Dict[str, Any]) -> None:
-    """Create a DynamoDB table if it does not exist.
+    """ This method has been deprecated and will no longer be used as resources will be created by infrastructure (IAC)
+
+    Create a DynamoDB table if it does not exist.
 
     Args:
         dynamodb: DynamoDB resource
