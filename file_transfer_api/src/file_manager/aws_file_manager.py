@@ -15,17 +15,14 @@ download_path = os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads")
 
 
 class AWSFileManager(AbstractFileManager):
-    def __init__(self, target_bucket: str, s3_client: Optional[boto3.client] = None):
+    def __init__(self, target_bucket: str, s3_client: Optional[boto3.client] = boto3.client("s3")):
         """Initialises the AWS file manager.
 
         Args:
             target_bucket: Name of the target bucket in AWS S3.
             s3_client: AWS S3 client.
         """
-        if s3_client is None:
-            self.client = boto3.client("s3")
-        else:
-            self.client = s3_client
+        self.client = s3_client
         self.target_bucket = target_bucket
 
     def upload_file(self, file: IO) -> URLPath:
