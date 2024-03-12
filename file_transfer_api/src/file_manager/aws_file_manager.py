@@ -3,19 +3,20 @@ from uuid import uuid4
 
 from src.file_manager.abstract_file_manager import AbstractFileManager
 import boto3
+from botocore.client import BaseClient  # For type hinting
 import os
 from botocore.exceptions import NoCredentialsError
 from src.exceptions.file_exceptions import (FileDownloadError, FileUploadError, FileDeleteError, FileDoesNotExistError,
                                             FileUpdateError)
-from src.file_manager.utils.url_utils import URLPath
-from typing import IO, Optional
+from src.file_manager.schemas.s3_uri import S3Uri
+from typing import IO, Optional, Type
 
 # Get download location from the environment
 download_path = os.getenv("DOWNLOAD_DIRECTORY", default="data/downloads")
 
 
 class AWSFileManager(AbstractFileManager):
-    def __init__(self, target_bucket: str, s3_client: Optional[boto3.client] = boto3.client("s3")):
+    def __init__(self, target_bucket: str, s3_client: Optional[Type[BaseClient]] = boto3.client("s3")):
         """Initialises the AWS file manager.
 
         Args:
@@ -25,7 +26,7 @@ class AWSFileManager(AbstractFileManager):
         self.client = s3_client
         self.target_bucket = target_bucket
 
-    def upload_file(self, file: IO) -> URLPath:
+    def upload_file(self, file: IO) -> S3Uri:
         """Uploads a file to a target bucket in AWS S3.
 
         Args:
@@ -45,12 +46,10 @@ class AWSFileManager(AbstractFileManager):
             self.client.upload_fileobj(file, self.target_bucket, file_id)
         except NoCredentialsError:
             raise FileUploadError
-        # Return the file id and the file path of where it was saved in the s3 bucket
-        full_path = "s3://" + self.target_bucket + "/" + file_id
 
         # Return url as path object
 
-        return URLPath(full_path)
+        return S3Uri(bucket=self.target_bucket, name=file_id)
 
     def download_file(self, file_id: str) -> Path:
         """Downloads a file from a target bucket in AWS S3.
