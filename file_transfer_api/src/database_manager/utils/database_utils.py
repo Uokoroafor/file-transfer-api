@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base
 from sqlalchemy_utils import database_exists, create_database
-from sqlalchemy.exc import SQLAlchemyError
 
 
 def create_database_if_not_exists(database_url: str) -> bool:
@@ -41,3 +41,6 @@ def create_tables(database_url: str, base: declarative_base) -> bool:
         return False
     except Exception as e:
         raise e
+
+
+
